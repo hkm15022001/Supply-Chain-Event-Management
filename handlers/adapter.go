@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/hkm15022001/Supply-Chain-Event-Management/models"
+	"github.com/lucthienbinh/golang_scem/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

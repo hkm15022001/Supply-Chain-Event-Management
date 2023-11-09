@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hkm15022001/Supply-Chain-Event-Management/handlers"
-	"github.com/hkm15022001/Supply-Chain-Event-Management/middlewares"
+	"github.com/lucthienbinh/golang_scem/handlers"
+	"github.com/lucthienbinh/golang_scem/middlewares"
 )
 
 var (
@@ -18,8 +18,12 @@ func RunServer() {
 	// gin.SetMode(gin.ReleaseMode)
 	// export GIN_MODE=debug
 
-	// Initial auth middleware
-	middlewares.RunAuth()
+	// Initial web auth middleware
+	middlewares.RunWebAuth()
+
+	// Initial app auth middleware
+	middlewares.RunAppJWTAuth()
+
 	// Connect Postgres database
 	if err := handlers.ConnectPostgres(); err != nil {
 		// if err := handlers.ConnectMySQL(); err != nil {
@@ -41,6 +45,9 @@ func RunServer() {
 // this way every group of routes can be defined in their own file
 // so this one won't be so messy
 func routeList() {
+
+	userAuth := router.Group("/user-auth")
+	userAuthRoutes(userAuth)
 
 	api := router.Group("/api")
 	userRoutes(api)

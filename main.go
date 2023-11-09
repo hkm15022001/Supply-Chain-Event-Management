@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hkm15022001/Supply-Chain-Event-Management/routes"
+	"github.com/lucthienbinh/golang_scem/routes"
 )
 
 func main() {

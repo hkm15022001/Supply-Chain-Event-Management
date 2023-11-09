@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/hkm15022001/Supply-Chain-Event-Management/handlers"
+	"github.com/lucthienbinh/golang_scem/handlers"
 )
 
 func orderRoutes(rg *gin.RouterGroup) {
