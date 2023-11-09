@@ -12,8 +12,11 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
+	"github.com/lucthienbinh/golang_scem/models"
 	"github.com/twinj/uuid"
 )
+
+// Source: https://learn.vonage.com/blog/2020/03/13/using-jwt-for-authentication-in-a-golang-application-dr
 
 var client *redis.Client
 
@@ -36,34 +39,53 @@ func RunAppAuth() {
 // -------------------- Public function --------------------
 
 // CreateAppToken after logged in successful
-func CreateAppToken(c *gin.Context) {
+func CreateAppToken(c *gin.Context, userAuth *models.UserAuthenticate) {
 
-	ts, err := createToken(user.ID)
+	ts, err := createToken(userAuth.ID)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
-	saveErr := createAuth(user.ID, ts)
+	saveErr := createAuth(userAuth.ID, ts)
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
 	tokens := map[string]string{
 		"access_token":  ts.AccessToken,
 		"refresh_token": ts.RefreshToken,
+		"token_type":    "Bearer ",
+		"expires":       strconv.FormatInt(ts.AtExpires, 10),
 	}
-	c.JSON(http.StatusOK, tokens)
+	c.JSON(http.StatusCreated, tokens)
 }
 
-// TokenAuthMiddleware secure private routes
-func TokenAuthMiddleware() gin.HandlerFunc {
+// ValidateAppToken secure private routes
+func ValidateAppToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := tokenValid(c.Request)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, err.Error())
-			c.Abort()
-			return
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": err.Error()})
+		} else {
+			c.Next()
 		}
-		c.Next()
+
+	}
+}
+
+// ValidateAppTokenForRefresh secure private routes
+func ValidateAppTokenForRefresh() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		err := tokenValid(c.Request)
+		if err != nil {
+			if (err.Error() == "Token is expired") && (c.FullPath() == "/user-auth/app/access-token/get-new") {
+				c.Next()
+			} else {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": err.Error()})
+			}
+
+		} else {
+			c.Next()
+		}
 	}
 }
 
@@ -81,6 +103,86 @@ func DeleteAppToken(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, "Successfully logged out")
 }
+
+// CheckOldToken to check when open app
+func CheckOldToken(c *gin.Context) {
+	c.JSON(http.StatusOK, "Valid app access token")
+}
+
+// RefreshAppToken function
+func RefreshAppToken(c *gin.Context) {
+	mapToken := map[string]string{}
+	if err := c.ShouldBindJSON(&mapToken); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+	refreshToken := mapToken["refresh_token"]
+
+	//verify the token
+	os.Setenv("REFRESH_SECRET", "mcmvmkmsdnfsdmfdsjf") //this should be in an env file
+	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		//Make sure that the token method conform to "SigningMethodHMAC"
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("REFRESH_SECRET")), nil
+	})
+	//if there is an error, the token must have expired
+	if err != nil {
+		fmt.Println("the error: ", err)
+		c.JSON(http.StatusUnauthorized, "Refresh token expired")
+		return
+	}
+	//is token valid?
+	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
+		c.JSON(http.StatusUnauthorized, err)
+		return
+	}
+	//Since token is valid, get the uuid:
+	claims, ok := token.Claims.(jwt.MapClaims) //the token claims should conform to MapClaims
+	if ok && token.Valid {
+		refreshUUID, ok := claims["refresh_uuid"].(string) //convert the interface to string
+		if !ok {
+			c.JSON(http.StatusUnprocessableEntity, err)
+			return
+		}
+		userID, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
+		userIDConvert := uint(userID)
+		if err != nil {
+			c.JSON(http.StatusUnprocessableEntity, "Error occurred")
+			return
+		}
+		//Delete the previous Refresh Token
+		deleted, delErr := deleteAuth(refreshUUID)
+		if delErr != nil || deleted == 0 { //if any goes wrong
+			c.JSON(http.StatusUnauthorized, "unauthorized")
+			return
+		}
+		//Create new pairs of refresh and access tokens
+		ts, createErr := createToken(userIDConvert)
+		if createErr != nil {
+			c.JSON(http.StatusForbidden, createErr.Error())
+			return
+		}
+		//save the tokens metadata to redis
+		saveErr := createAuth(userIDConvert, ts)
+		if saveErr != nil {
+			c.JSON(http.StatusForbidden, saveErr.Error())
+			return
+		}
+		tokens := map[string]string{
+			"access_token":  ts.AccessToken,
+			"refresh_token": ts.RefreshToken,
+			"token_type":    "Bearer ",
+			"expires":       strconv.FormatInt(ts.AtExpires, 10),
+		}
+		c.JSON(http.StatusCreated, tokens)
+	} else {
+		c.JSON(http.StatusUnauthorized, "refresh expired")
+	}
+}
+
+// -------------------- Private function --------------------
 
 type accessDetails struct {
 	AccessUUID string
@@ -160,6 +262,9 @@ func extractToken(r *http.Request) string {
 // keyFunc will receive the parsed token and should return the key for validating.
 func verifyToken(r *http.Request) (*jwt.Token, error) {
 	tokenString := extractToken(r)
+	if tokenString == "" {
+		return nil, errors.New("unauthorized")
+	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -207,125 +312,12 @@ func extractTokenMetadata(r *http.Request) (*accessDetails, error) {
 	return nil, err
 }
 
-type todo struct {
-	UserID uint   `json:"user_id"`
-	Title  string `json:"title"`
-}
-
-func fetchAuth(authD *accessDetails) (uint, error) {
-	userid, err := client.Get(authD.AccessUUID).Result()
-	if err != nil {
-		return 0, err
-	}
-	userID, _ := strconv.ParseUint(userid, 10, 64)
-	userIDConvert := uint(userID)
-	if authD.UserID != userIDConvert {
-		return 0, errors.New("unauthorized")
-	}
-	return userIDConvert, nil
-}
-
-func createTodo(c *gin.Context) {
-	var td todo
-	if err := c.ShouldBindJSON(&td); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, "invalid json")
-		return
-	}
-	//Extract the access token metadata
-	metadata, err := extractTokenMetadata(c.Request)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
-	userID, err := fetchAuth(metadata)
-	userIDConvert := uint(userID)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, err.Error())
-		return
-	}
-	td.UserID = userIDConvert
-	//you can proceed to save the Todo to a database
-	//but we will just return it to the caller:
-
-	c.JSON(http.StatusCreated, td)
-}
-
 func deleteAuth(givenUUID string) (int64, error) {
 	deleted, err := client.Del(givenUUID).Result()
 	if err != nil {
 		return 0, err
 	}
 	return deleted, nil
-}
-
-func Refresh(c *gin.Context) {
-	mapToken := map[string]string{}
-	if err := c.ShouldBindJSON(&mapToken); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, err.Error())
-		return
-	}
-	refreshToken := mapToken["refresh_token"]
-
-	//verify the token
-	os.Setenv("REFRESH_SECRET", "mcmvmkmsdnfsdmfdsjf") //this should be in an env file
-	token, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
-		//Make sure that the token method conform to "SigningMethodHMAC"
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(os.Getenv("REFRESH_SECRET")), nil
-	})
-	//if there is an error, the token must have expired
-	if err != nil {
-		fmt.Println("the error: ", err)
-		c.JSON(http.StatusUnauthorized, "Refresh token expired")
-		return
-	}
-	//is token valid?
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		c.JSON(http.StatusUnauthorized, err)
-		return
-	}
-	//Since token is valid, get the uuid:
-	claims, ok := token.Claims.(jwt.MapClaims) //the token claims should conform to MapClaims
-	if ok && token.Valid {
-		refreshUUID, ok := claims["refresh_uuid"].(string) //convert the interface to string
-		if !ok {
-			c.JSON(http.StatusUnprocessableEntity, err)
-			return
-		}
-		userID, err := strconv.ParseUint(fmt.Sprintf("%.f", claims["user_id"]), 10, 64)
-		userIDConvert := uint(userID)
-		if err != nil {
-			c.JSON(http.StatusUnprocessableEntity, "Error occurred")
-			return
-		}
-		//Delete the previous Refresh Token
-		deleted, delErr := deleteAuth(refreshUUID)
-		if delErr != nil || deleted == 0 { //if any goes wrong
-			c.JSON(http.StatusUnauthorized, "unauthorized")
-			return
-		}
-		//Create new pairs of refresh and access tokens
-		ts, createErr := createToken(userIDConvert)
-		if createErr != nil {
-			c.JSON(http.StatusForbidden, createErr.Error())
-			return
-		}
-		//save the tokens metadata to redis
-		saveErr := createAuth(userIDConvert, ts)
-		if saveErr != nil {
-			c.JSON(http.StatusForbidden, saveErr.Error())
-			return
-		}
-		tokens := map[string]string{
-			"access_token":  ts.AccessToken,
-			"refresh_token": ts.RefreshToken,
-		}
-		c.JSON(http.StatusCreated, tokens)
-	} else {
-		c.JSON(http.StatusUnauthorized, "refresh expired")
-	}
 }
 
 func deleteTokens(authD *accessDetails) error {
@@ -346,4 +338,40 @@ func deleteTokens(authD *accessDetails) error {
 		return errors.New("something went wrong")
 	}
 	return nil
+}
+
+// -------------------- Author example --------------------
+// Fetch data in redis with extractTokenMetadata()
+
+func fetchAuth(authD *accessDetails) (uint, error) {
+	userid, err := client.Get(authD.AccessUUID).Result()
+	if err != nil {
+		return 0, err
+	}
+	userID, _ := strconv.ParseUint(userid, 10, 64)
+	userIDConvert := uint(userID)
+	if authD.UserID != userIDConvert {
+		return 0, errors.New("unauthorized")
+	}
+	return userIDConvert, nil
+}
+
+func createTodo(c *gin.Context) {
+
+	//Extract the access token metadata
+	metadata, err := extractTokenMetadata(c.Request)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "unauthorized")
+		return
+	}
+	userID, err := fetchAuth(metadata)
+	userIDConvert := uint(userID)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, err.Error())
+		return
+	}
+	// you can proceed to save the Todo to a database
+	// but we will just return it to the caller:
+
+	c.JSON(http.StatusCreated, userIDConvert)
 }
