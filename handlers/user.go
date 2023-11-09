@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lucthienbinh/golang_scem/middlewares"
 	"github.com/lucthienbinh/golang_scem/models"
+	"gopkg.in/validator.v2"
 )
 
 // -------------------- USER AUTHENTICATION HANDLER FUNTION --------------------
@@ -20,9 +21,10 @@ func WebLoginHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if json.Email == "" || json.Password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "missing field"})
-		return
+	if err := validator.Validate(json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 	}
 	userAuth := &models.UserAuthenticate{}
 	if err := db.Where("email = ? AND active = true", json.Email).First(&userAuth).Error; err != nil {
@@ -121,6 +123,9 @@ func CreateCustomerHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	if err := validator.Validate(customerWithAuth); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
 	customer, userAuth := customerWithAuth.ConvertCWAToNormal()
 	if err := db.Create(&userAuth).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -133,7 +138,7 @@ func CreateCustomerHandler(c *gin.Context) {
 			return
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"server_response": "A customer has been created!"})
+	c.JSON(http.StatusCreated, gin.H{"server_response": "A customer has been created!"})
 	return
 }
 
@@ -219,7 +224,7 @@ func CreateEmployeeHandler(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"server_response": "An employee has been created!"})
+	c.JSON(http.StatusCreated, gin.H{"server_response": "An employee has been created!"})
 	return
 }
 
@@ -296,7 +301,7 @@ func CreateDeliveryLocationHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"server_response": "A delivery location has been created!"})
+	c.JSON(http.StatusCreated, gin.H{"server_response": "A delivery location has been created!"})
 	return
 }
 
@@ -373,7 +378,7 @@ func CreateEmployeeTypeHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"server_response": "An employee type has been created!"})
+	c.JSON(http.StatusCreated, gin.H{"server_response": "An employee type has been created!"})
 	return
 }
 
