@@ -63,6 +63,9 @@ func webRouter() http.Handler {
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "X-CSRF-Token", "Accept"}
 	e.Use(cors.New(config))
+	e.Static("/api/image", "./public/upload/images")
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	e.MaxMultipartMemory = 8 << 20 // 8 MiB
 
 	webAuth := e.Group("/web-auth")
 	webAuthRoutes(webAuth)
@@ -77,6 +80,7 @@ func webRouter() http.Handler {
 
 func appRouter() http.Handler {
 	e := gin.Default()
+	e.Static("/api/image", "./public/upload/images")
 
 	appAuth := e.Group("/app-auth")
 	appAuthRoutes(appAuth)

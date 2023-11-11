@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // UserAuthenticate structure for authentication
@@ -24,6 +24,7 @@ type Customer struct {
 	Gender     string `json:"gender" validate:"nonzero"`
 	Address    string `json:"address" validate:"nonzero"`
 	Point      int16  `json:"point"`
+	DeletedAt  gorm.DeletedAt
 }
 
 // Employee structure
@@ -35,26 +36,29 @@ type Employee struct {
 	Phone              int64  `json:"phone" validate:"nonzero"`
 	Gender             string `json:"gender" validate:"nonzero"`
 	Address            string `json:"address" validate:"nonzero"`
-	IdentityCard       string `json:"indentity_card" validate:"nonzero"`
+	IdentityCard       string `json:"identity_card" validate:"nonzero"`
 	EmployeeTypeID     uint   `json:"employee_type_id" validate:"nonzero"`
 	Avatar             string `json:"avatar" validate:"nonzero"`
 	DeliveryLocationID uint   `json:"delivery_location_id"`
+	DeletedAt          gorm.DeletedAt
 }
 
 // EmployeeType structure
 type EmployeeType struct {
-	ID   uint   `gorm:"primary_key;<-:false" json:"id"`
-	Name string `validate:"nonzero" json:"name"`
+	ID        uint   `gorm:"primary_key;<-:false" json:"id"`
+	Name      string `validate:"nonzero" json:"name"`
+	DeletedAt gorm.DeletedAt
 }
 
 // DeliveryLocation structure
 type DeliveryLocation struct {
-	ID       uint   `gorm:"primary_key;<-:false" json:"id"`
-	City     string `json:"city"`
-	District string `json:"district"`
+	ID        uint   `gorm:"primary_key;<-:false" json:"id"`
+	City      string `json:"city" validate:"nonzero"`
+	District  string `json:"district" validate:"nonzero"`
+	DeletedAt gorm.DeletedAt
 }
 
-// -------------------- Struct use to covert data to json for handler --------------------
+// -------------------- Struct uses to fetch data for frontend --------------------
 
 // Login structure
 type Login struct {
@@ -105,15 +109,41 @@ type EmployeeWithAuth struct {
 	DeliveryLocationID uint   `json:"delivery_location_id"`
 }
 
-// -------------------- Convert function --------------------
+// EmployeeInfoFetchDB structure
+type EmployeeInfoFetchDB struct {
+	ID                       uint   `json:"id"`
+	Name                     string `json:"name"`
+	Age                      uint8  `json:"age"`
+	Phone                    int64  `json:"phone"`
+	Gender                   string `json:"gender"`
+	Address                  string `json:"address"`
+	IdentityCard             string `json:"identity_card"`
+	EmployeeTypeName         string `json:"employee_type_name"`
+	Avatar                   string `json:"avatar"`
+	DeliveryLocationCity     string `json:"delivery_location_city"`
+	DeliveryLocationDistrict string `json:"delivery_location_district"`
+}
 
-// ConvertToBasic to keep safe for sensitive info
+// -------------------- Convert function to keep safe sensitive info--------------------
+
+// ConvertToBasic function
 func (c *Customer) ConvertToBasic() CustomerBasicInfo {
 	return CustomerBasicInfo{
 		ID:      c.ID,
 		Name:    c.Name,
 		Phone:   c.Phone,
 		Address: c.Address,
+	}
+}
+
+// ConvertToBasic function
+func (e *Employee) ConvertToBasic() EmployeeBasicInfo {
+	return EmployeeBasicInfo{
+		ID:             e.ID,
+		Name:           e.Name,
+		EmployeeTypeID: e.EmployeeTypeID,
+		Phone:          e.Phone,
+		Address:        e.Address,
 	}
 }
 
@@ -129,17 +159,6 @@ func (c *CustomerWithAuth) ConvertCWAToNormal() (*Customer, *UserAuthenticate) {
 			Email:    c.Email,
 			Password: c.Password,
 		}
-}
-
-// ConvertToBasic to keep safe for sensitive info
-func (e *Employee) ConvertToBasic() EmployeeBasicInfo {
-	return EmployeeBasicInfo{
-		ID:             e.ID,
-		Name:           e.Name,
-		EmployeeTypeID: e.EmployeeTypeID,
-		Phone:          e.Phone,
-		Address:        e.Address,
-	}
 }
 
 // ConvertEWAToNormal to fetch data from front end

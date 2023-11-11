@@ -7,13 +7,13 @@ import (
 )
 
 func webAuthRoutes(rg *gin.RouterGroup) {
-	rg.POST("/web/loginJSON", handlers.WebLoginHandler)
-	rg.GET("/web/logout", handlers.WebLogoutHandler)
+	rg.POST("/loginJSON", handlers.WebLoginHandler)
+	rg.GET("/logout", handlers.WebLogoutHandler)
 }
 
 func appAuthRoutes(rg *gin.RouterGroup) {
-	rg.POST("/app/loginJSON", handlers.AppLoginHandler)
-	rg.GET("/app/logout", handlers.AppLogoutHandler)
+	rg.POST("/loginJSON", handlers.AppLoginHandler)
+	rg.GET("/logout", handlers.AppLogoutHandler)
 	// validate old token
 	accessToken := rg.Group("/app/access-token", middlewares.ValidateAppTokenForRefresh())
 	accessToken.POST("/get-new", handlers.AppReloginHandler)
@@ -23,7 +23,6 @@ func appAuthRoutes(rg *gin.RouterGroup) {
 func userRoutes(rg *gin.RouterGroup) {
 
 	customer := rg.Group("/customer")
-	customer.Use(middlewares.ValidateWebSession())
 	customer.GET("/list", handlers.GetCustomerListHandler)
 	customer.GET("/id/:id", handlers.GetCustomerHandler)
 	customer.POST("/create", handlers.CreateCustomerHandler)
@@ -31,15 +30,14 @@ func userRoutes(rg *gin.RouterGroup) {
 	customer.DELETE("/delete/:id", handlers.DeleteCustomerHandler)
 
 	employee := rg.Group("/employee")
-	// employees.Use(middlewares.ValidateSession)
 	employee.GET("/list", handlers.GetEmployeeListHandler)
 	employee.GET("/id/:id", handlers.GetEmployeeHandler)
 	employee.POST("/create", handlers.CreateEmployeeHandler)
+	employee.POST("/upload/image", handlers.ImageEmployeeHandler)
 	employee.PUT("/update/:id", handlers.UpdateEmployeeHandler)
 	employee.DELETE("/delete/:id", handlers.DeleteEmployeeHandler)
 
 	employeeType := rg.Group("/employee-type")
-	// employees.Use(middlewares.ValidateSession)
 	employeeType.GET("/list", handlers.GetEmployeeTypeListHandler)
 	employeeType.GET("/id/:id", handlers.GetEmployeeTypeHandler)
 	employeeType.POST("/create", handlers.CreateEmployeeTypeHandler)
@@ -48,7 +46,6 @@ func userRoutes(rg *gin.RouterGroup) {
 
 	// middlewares.ValidateAppToken()
 	deliveryLocation := rg.Group("/delivery-location")
-	customer.Use(middlewares.ValidateWebSession())
 	deliveryLocation.GET("/list", handlers.GetDeliveryLocationListHandler)
 	deliveryLocation.GET("/id/:id", handlers.GetDeliveryLocationHandler)
 	deliveryLocation.POST("/create", handlers.CreateDeliveryLocationHandler)
