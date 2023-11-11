@@ -6,9 +6,12 @@ import (
 	"github.com/lucthienbinh/golang_scem/middlewares"
 )
 
-func userAuthRoutes(rg *gin.RouterGroup) {
+func webAuthRoutes(rg *gin.RouterGroup) {
 	rg.POST("/web/loginJSON", handlers.WebLoginHandler)
 	rg.GET("/web/logout", handlers.WebLogoutHandler)
+}
+
+func appAuthRoutes(rg *gin.RouterGroup) {
 	rg.POST("/app/loginJSON", handlers.AppLoginHandler)
 	rg.GET("/app/logout", handlers.AppLogoutHandler)
 	// validate old token
@@ -43,7 +46,9 @@ func userRoutes(rg *gin.RouterGroup) {
 	employeeType.PUT("/update/:id", handlers.UpdateEmployeeTypeHandler)
 	employeeType.DELETE("/delete/:id", handlers.DeleteEmployeeTypeHandler)
 
-	deliveryLocation := rg.Group("/delivery-location", middlewares.ValidateAppToken())
+	// middlewares.ValidateAppToken()
+	deliveryLocation := rg.Group("/delivery-location")
+	customer.Use(middlewares.ValidateWebSession())
 	deliveryLocation.GET("/list", handlers.GetDeliveryLocationListHandler)
 	deliveryLocation.GET("/id/:id", handlers.GetDeliveryLocationHandler)
 	deliveryLocation.POST("/create", handlers.CreateDeliveryLocationHandler)
