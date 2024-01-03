@@ -2,11 +2,11 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lucthienbinh/golang_scem/internal/handler"
+	"github.com/hkm12345123/transport_system/internal/handler"
 )
 
-// UserRoutes to manage user model
-func UserRoutes(rg *gin.RouterGroup) {
+// WebUserRoutes to manage user model
+func WebUserRoutes(rg *gin.RouterGroup) {
 
 	customer := rg.Group("/customer")
 	customer.GET("/list", handler.GetCustomerListHandler)
@@ -14,6 +14,14 @@ func UserRoutes(rg *gin.RouterGroup) {
 	customer.POST("/create", handler.CreateCustomerHandler)
 	customer.PUT("/update/:id", handler.UpdateCustomerHandler)
 	customer.DELETE("/delete/:id", handler.DeleteCustomerHandler)
+
+	customerAuth := rg.Group("/customer-auth")
+	customerAuth.GET("/list", handler.GetCustomerAuthListHandler)
+
+	customerCredit := rg.Group("/customer-credit")
+	customerCredit.GET("/list", handler.GetCustomerCreditListHandler)
+	customerCredit.PUT("/update/validattion/:id", handler.UpdateCustomerCreditValidationHandler)
+	customerCredit.PUT("/update/balance/:id", handler.UpdateCustomerCreditBalanceHandler)
 
 	employee := rg.Group("/employee")
 	employee.GET("/list", handler.GetEmployeeListHandler)
@@ -32,12 +40,26 @@ func UserRoutes(rg *gin.RouterGroup) {
 	employeeType.PUT("/update/:id", handler.UpdateEmployeeTypeHandler)
 	employeeType.DELETE("/delete/:id", handler.DeleteEmployeeTypeHandler)
 
-	// middlewares.ValidateAppToken()
 	deliveryLocation := rg.Group("/delivery-location")
 	deliveryLocation.GET("/list", handler.GetDeliveryLocationListHandler)
 	deliveryLocation.GET("/id/:id", handler.GetDeliveryLocationHandler)
 	deliveryLocation.POST("/create", handler.CreateDeliveryLocationHandler)
 	deliveryLocation.PUT("/update/:id", handler.UpdateDeliveryLocationHandler)
 	deliveryLocation.DELETE("/delete/:id", handler.DeleteDeliveryLocationHandler)
+
+}
+
+// AppUserRoutes to manage user model
+func AppUserRoutes(rg *gin.RouterGroup) {
+
+	customer := rg.Group("/customer")
+	customer.GET("/id/:id", handler.GetCustomerHandler)
+	customer.PUT("/update/:id", handler.UpdateCustomerHandler)
+
+	customerNotification := rg.Group("/customer-notification")
+	customerNotification.GET("/list/customer-id/:id", handler.GetCustomerNotificationListByCustomerIDHandler)
+
+	employee := rg.Group("/employee")
+	employee.GET("/id/:id", handler.GetEmployeeHandler)
 
 }

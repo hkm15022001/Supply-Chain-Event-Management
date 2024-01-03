@@ -1,11 +1,19 @@
 package handler
 
 import (
+	"crypto/rand"
+	"errors"
+	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lucthienbinh/golang_scem/internal/model"
+	"github.com/google/uuid"
+	"github.com/hkm12345123/transport_system/internal/model"
+	"golang.org/x/sync/errgroup"
 	"gopkg.in/validator.v2"
 )
 
@@ -13,77 +21,184 @@ import (
 
 // GetOrderInfoListHandler in database
 func GetOrderInfoListHandler(c *gin.Context) {
-	orderInfoList := []model.OrderInfoFetchDB{}
-	selectPart := "ord.id, ord.weight, ord.volume, ord.type, ord.image, " +
-		"c1.name as customer_send_name, c2.name as customer_receive_name, t.name as transport_type, " +
-		"e1.name as empl_create_name, e2.name as empl_ship_name, ord.receiver, ord.detail, ord.total_price, ord.note, ord.created_at"
-	leftJoin1 := "left join customers as c1 on ord.customer_send_id = c1.id"
-	leftJoin2 := "left join customers as c2 on ord.customer_receive_id = c2.id"
-	leftJoin3 := "left join transport_types as t on ord.transport_type_id = t.id"
-	leftJoin4 := "left join employees as e1 on ord.empl_create_id = e1.id"
-	leftJoin5 := "left join employees as e2 on ord.empl_ship_id = e2.id"
 
-	db.Table("order_infos as ord").Select(selectPart).Joins(leftJoin1).Joins(leftJoin2).Joins(leftJoin3).Joins(leftJoin4).Joins(leftJoin5).
-		Order("ord.id asc").Find(&orderInfoList)
+	type APIOrderList struct {
+		ID                uint   `json:"id"`
+		CustomerSendID    uint   `json:"customer_send_id" validate:"nonzero"`
+		CustomerReceiveID uint   `json:"customer_receive_id"`
+		Sender            string `json:"sender" validate:"nonzero"`
+		Receiver          string `json:"receiver" validate:"nonzero"`
+		TransportTypeID   uint   `json:"transport_type_id" validate:"nonzero"`
+		TotalPrice        int64  `json:"total_price"`
+	}
+	orderInfoList := []APIOrderList{}
+	db.Model(&model.OrderInfo{}).Order("id asc").Find(&orderInfoList)
+
+	type APIOrderPay struct {
+		ID                  uint   `gorm:"primary_key;<-:false" json:"id"`
+		OrderID             uint   `json:"order_id"`
+		PayMethod           string `json:"pay_method"`
+		PayStatus           bool   `json:"pay_status"`
+		TotalPrice          int64  `json:"total_price"`
+		FinishedStepOne     bool   `json:"finished_step_one"`
+		FinishedStepTwo     bool   `json:"finished_step_two"`
+		ShipperReceiveMoney bool   `json:"shipper_receive_money"`
+	}
+	orderPays := []APIOrderPay{}
+	db.Model(&model.OrderPay{}).Order("id asc").Find(&orderPays)
+
+	c.JSON(http.StatusOK, gin.H{"order_info_list": orderInfoList, "order_pay_list": &orderPays})
+	return
+}
+
+// GetOrderListByCustomerIDHandler in database
+func GetOrderListByCustomerIDHandler(c *gin.Context) {
+
+	type APIOrderList struct {
+		ID             uint   `json:"id"`
+		CustomerSendID uint   `json:"customer_send_id"`
+		Receiver       string `json:"receiver" validate:"nonzero"`
+		CreatedAt      int64  `json:"created_at"`
+		Detail         string `json:"detail"`
+		TotalPrice     int64  `json:"total_price"`
+		Image          string `json:"image"`
+	}
+	orderInfoList := []APIOrderList{}
+	db.Model(&model.OrderInfo{}).Order("id asc").Find(&orderInfoList, "customer_send_id = ?", c.Param("id"))
 
 	c.JSON(http.StatusOK, gin.H{"order_info_list": orderInfoList})
 	return
 }
 
-func getOrderInfoOrNotFound(c *gin.Context) (*model.OrderInfoFetchDB, error) {
-	orderInfoFetchDB := &model.OrderInfoFetchDB{}
-	selectPart := "ord.id, ord.weight, ord.volume, ord.type, ord.image, " +
-		"c1.name as customer_send_name, c2.name as customer_receive_name, t.name as transport_type, " +
-		"e1.name as empl_create_name, e2.name as empl_ship_name, ord.receiver, ord.detail, ord.total_price, ord.note"
-	leftJoin1 := "left join customers as c1 on ord.customer_send_id = c1.id"
-	leftJoin2 := "left join customers as c2 on ord.customer_receive_id = c2.id"
-	leftJoin3 := "left join transport_types as t on ord.transport_type_id = t.id"
-	leftJoin4 := "left join employees as e1 on ord.empl_create_id = e1.id"
-	leftJoin5 := "left join employees as e2 on ord.empl_ship_id = e2.id"
-
-	if err := db.Table("order_infos as ord").Select(selectPart).Joins(leftJoin1).Joins(leftJoin2).Joins(leftJoin3).Joins(leftJoin4).Joins(leftJoin5).
-		Order("ord.id asc").First(&orderInfoFetchDB, c.Param("id")).Error; err != nil {
-		return orderInfoFetchDB, err
+func getOrderInfoOrNotFound(c *gin.Context) (*model.OrderInfo, error) {
+	orderInfo := &model.OrderInfo{}
+	if err := db.First(orderInfo, c.Param("id")).Error; err != nil {
+		return orderInfo, err
 	}
-	return orderInfoFetchDB, nil
+	return orderInfo, nil
+}
+
+func getOrderInfoOrNotFoundForPayment(orderID uint) (*model.OrderInfoForPayment, error) {
+	orderInfoForPayment := &model.OrderInfoForPayment{}
+	err := db.Model(&model.OrderInfo{}).First(orderInfoForPayment, orderID).Error
+	if err != nil {
+		return orderInfoForPayment, err
+	}
+	return orderInfoForPayment, nil
+}
+
+func getOrderInfoOrNotFoundForShipment(orderID uint) (*model.OrderInfoForShipment, error) {
+	orderInfoForShipment := &model.OrderInfoForShipment{}
+	err := db.Model(&model.OrderInfo{}).Order("id asc").First(&orderInfoForShipment, orderID).Error
+	if err != nil {
+		return orderInfoForShipment, err
+	}
+	return orderInfoForShipment, nil
+}
+
+func getOrderWorkflowDataByOrderID(orderID uint) (*model.OrderWorkflowData, error) {
+
+	orderWorkflowData := &model.OrderWorkflowData{}
+	err := db.Model(orderWorkflowData).Order("id asc").First(orderWorkflowData, "order_id = ?", orderID).Error
+	if err != nil {
+		return orderWorkflowData, err
+	}
+	return orderWorkflowData, nil
 }
 
 // GetOrderInfoHandler in database
 func GetOrderInfoHandler(c *gin.Context) {
-	orderInfoFetchDB, err := getOrderInfoOrNotFound(c)
+	orderInfo, err := getOrderInfoOrNotFound(c)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"order_info": &orderInfoFetchDB})
+	c.JSON(http.StatusOK, gin.H{"order_info": &orderInfo})
 	return
 }
 
-func calculateShortShipDistance(orderInfo *model.OrderInfo) (int64, error) {
+// CreateOrderFormData function
+func CreateOrderFormData(c *gin.Context) {
+	type APILongShipList struct {
+		ID                       uint   `json:"id"`
+		TransportTypeID          uint   `json:"transport_type_id"`
+		LicensePlate             string `json:"license_plate"`
+		EstimatedTimeOfDeparture int64  `json:"estimated_time_of_departure"`
+		EstimatedTimeOfArrival   int64  `json:"estimated_time_of_arrival"`
+		Finished                 bool   `json:"finished"`
+	}
+	longShips := []APILongShipList{}
+	transportTypes := []model.TransportType{}
+	// Run concurrency
+	var g errgroup.Group
 
-	// From Location: orderInfo.Sender
-	// To Location: orderInfo.Receiver
-	// To emulates google api distance calculation responses after receive sender and receiver info
-	// By example, we will give the distance by default is 10 km
-	time.Sleep(5 * time.Second)
-	return 10, nil
+	// Get long ship list
+	g.Go(func() error {
+		if err := db.Model(&model.LongShip{}).Order("id asc").Find(&longShips, "finished is ? and estimated_time_of_departure > ?", false, time.Now().Unix()).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+
+	// Calculate total price and Create order ID base on Time
+	g.Go(func() error {
+		if err := db.Where("same_city is ?", false).Order("id asc").Find(&transportTypes).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"long_ship_list":      &longShips,
+		"transport_type_list": &transportTypes,
+	})
+	return
+}
+
+// ImageOrderHandler updload image of employee
+func ImageOrderHandler(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	log.Println(file.Filename)
+
+	b := make([]byte, 8)
+
+	if _, err := rand.Read(b); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	newName := fmt.Sprintf("%x", b)
+	createTime := fmt.Sprintf("%d", time.Now().Unix())
+	newName = createTime + "_" + newName + ".jpg"
+	filepath := os.Getenv("IMAGE_FILE_PATH") + newName
+
+	// Upload the file to specific dst.
+	if err := c.SaveUploadedFile(file, filepath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"filename": newName})
+	return
 }
 
 func calculateTotalPrice(orderInfo *model.OrderInfo) (int64, error) {
 	transportType := &model.TransportType{}
-	if err := db.First(&transportType, orderInfo.TransportTypeID).Error; err != nil {
+	if err := db.First(transportType, orderInfo.TransportTypeID).Error; err != nil {
 		return 0, err
 	}
 	var totalPrice int64
+	totalPrice = transportType.ShortShipPricePerKm * orderInfo.ShortShipDistance
 	if orderInfo.UseLongShip == true {
-		totalPrice += transportType.LongShipPrice
-	}
-	if orderInfo.UseShortShip == true {
-		shortShipDistance, err := calculateShortShipDistance(orderInfo)
-		if err != nil {
-			return 0, err
-		}
-		totalPrice += (transportType.ShortShipPricePerKm * shortShipDistance)
+		totalPrice += transportType.LongShipPricePerKm
 	}
 	return totalPrice, nil
 }
@@ -92,28 +207,138 @@ func calculateTotalPrice(orderInfo *model.OrderInfo) (int64, error) {
 func CreateOrderInfoHandler(c *gin.Context) {
 	orderInfo := &model.OrderInfo{}
 	if err := c.ShouldBindJSON(&orderInfo); err != nil {
+		log.Print("Error when send request to create order", err)
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	if err := validator.Validate(&orderInfo); err != nil {
+		log.Print("Error when validate request to create order", err)
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	// Clear frontend data if user try to send TotalPrice illegibly
-	orderInfo.TotalPrice = 0
-	totalPrice, err := calculateTotalPrice(orderInfo)
-	if err != nil {
+
+	// Run concurrency
+	var g errgroup.Group
+
+	// Check customer sender id and customer receive id
+	g.Go(func() error {
+		if err := db.First(&model.Customer{}, orderInfo.CustomerSendID).Error; err != nil {
+			return err
+		}
+		if orderInfo.CustomerReceiveID > 0 {
+			if err := db.First(&model.Customer{}, orderInfo.CustomerReceiveID).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
+	// Calculate total price and Create order ID base on Time
+	g.Go(func() error {
+		var err error
+		orderInfo.TotalPrice, err = calculateTotalPrice(orderInfo)
+		if err != nil {
+			return err
+		}
+		current := uuid.New().Time()
+		currentString := fmt.Sprintf("%d", current)
+		rawUint, _ := strconv.ParseUint(currentString, 10, 64)
+		orderInfo.ID = uint(rawUint / 100000000000)
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	orderInfo.TotalPrice = totalPrice
-	if err := db.Create(&orderInfo).Error; err != nil {
+
+	// Create order info
+	if err := db.Create(orderInfo).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
 		"server_response": "An order info has been created!",
 		"order_id":        orderInfo.ID,
+		"total_price":     orderInfo.TotalPrice,
+	})
+	return
+}
+
+// CreateOrderUseVoucherInfoHandler in database
+func CreateOrderUseVoucherInfoHandler(c *gin.Context) {
+
+	orderInfoWithVoucher := &model.OrderInfoWithVoucher{}
+	if err := c.ShouldBindJSON(&orderInfoWithVoucher); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	if err := validator.Validate(&orderInfoWithVoucher); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	orderInfo, orderVoucherID := orderInfoWithVoucher.ConvertToBasicOrder()
+
+	// Run concurrency
+	var g errgroup.Group
+	var voucherDiscount int64
+
+	// Check customer sender id and customer receive id
+	g.Go(func() error {
+		if err := db.First(&model.Customer{}, orderInfo.CustomerSendID).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+
+	// Check voucher id and get voucher discount
+	g.Go(func() error {
+		if orderVoucherID != 0 {
+			orderVoucher := &model.OrderVoucher{}
+			if err := db.Find(&orderVoucher, "id = ? AND start_date < ? AND end_date > ?", orderVoucherID, time.Now().Unix(), time.Now().Unix()).Error; err != nil {
+				return err
+			}
+			if *orderVoucher == (model.OrderVoucher{}) {
+				return errors.New("Bad request sent to server")
+			}
+			voucherDiscount = orderVoucher.Discount
+			return nil
+		}
+		voucherDiscount = 0
+		return nil
+	})
+
+	// Calculate total price and Create order ID base on Time
+	g.Go(func() error {
+		var err error
+		orderInfo.TotalPrice, err = calculateTotalPrice(orderInfo)
+		if err != nil {
+			return err
+		}
+		current := uuid.New().Time()
+		currentString := fmt.Sprintf("%d", current)
+		rawUint, _ := strconv.ParseUint(currentString, 10, 64)
+		orderInfo.ID = uint(rawUint / 100000000000)
+		return nil
+	})
+
+	if err := g.Wait(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	orderInfo.TotalPrice -= voucherDiscount
+
+	// Create order info
+	if err := db.Create(orderInfo).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{
+		"server_response": "An order info has been created!",
+		"order_id":        orderInfo.ID,
+		"total_price":     orderInfo.TotalPrice,
 	})
 	return
 }
@@ -126,9 +351,10 @@ func UpdateOrderInfoHandler(c *gin.Context) {
 		return
 	}
 	if err := c.ShouldBindJSON(&orderInfo); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
+	orderInfo.ID = getIDFromParam(c)
 	if err = db.Model(&orderInfo).Updates(&orderInfo).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -148,136 +374,4 @@ func DeleteOrderInfoHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"server_response": "Your information has been deleted!"})
 	return
-}
-
-// -------------------- TRANSPORT TYPE HANDLER FUNTION --------------------
-
-// GetTransportTypeListHandler in database
-func GetTransportTypeListHandler(c *gin.Context) {
-	transportTypes := []model.TransportType{}
-	db.Order("id asc").Find(&transportTypes)
-	c.JSON(http.StatusOK, gin.H{"transport_type_list": &transportTypes})
-	return
-}
-
-func getTransportTypeOrNotFound(c *gin.Context) (*model.TransportType, error) {
-	transportType := &model.TransportType{}
-	if err := db.First(&transportType, c.Param("id")).Error; err != nil {
-		return transportType, err
-	}
-	return transportType, nil
-}
-
-// GetTransportTypeHandler in database
-func GetTransportTypeHandler(c *gin.Context) {
-	transportType, err := getTransportTypeOrNotFound(c)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"transport_type_info": &transportType})
-	return
-}
-
-// CreateTransportTypeHandler in database
-func CreateTransportTypeHandler(c *gin.Context) {
-	transportType := &model.TransportType{}
-	if err := c.ShouldBindJSON(&transportType); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if err := db.Create(&transportType).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusCreated, gin.H{"server_response": "An transport type has been created!"})
-	return
-}
-
-// UpdateTransportTypeHandler in database
-func UpdateTransportTypeHandler(c *gin.Context) {
-	transportType, err := getTransportTypeOrNotFound(c)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-	if err := c.ShouldBindJSON(&transportType); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	transportType.ID = getIDFromParam(c)
-	if err = db.Model(&transportType).Updates(&transportType).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"server_response": "Your information has been updated!"})
-	return
-}
-
-// DeleteTransportTypeHandler in database
-func DeleteTransportTypeHandler(c *gin.Context) {
-	if _, err := getTransportTypeOrNotFound(c); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-	if err := db.Delete(&model.TransportType{}, c.Param("id")).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	}
-	c.JSON(http.StatusOK, gin.H{"server_response": "Your information has been deleted!"})
-	return
-}
-
-// -------------------- ORDER PAYMENT HANDLER FUNTION --------------------
-
-// GetOrderPayListHandler in database
-func GetOrderPayListHandler(c *gin.Context) {
-	orderPays := []model.OrderPay{}
-	db.Order("id asc").Find(&orderPays)
-	c.JSON(http.StatusOK, gin.H{"order_pay_list": &orderPays})
-	return
-}
-
-func getOrderPayOrNotFound(c *gin.Context) (*model.OrderPay, error) {
-	orderPay := &model.OrderPay{}
-	if err := db.First(&orderPay, c.Param("id")).Error; err != nil {
-		return orderPay, err
-	}
-	return orderPay, nil
-}
-
-// GetOrderPayHandler in database
-func GetOrderPayHandler(c *gin.Context) {
-	orderPay, err := getOrderPayOrNotFound(c)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"order_pay_info": &orderPay})
-	return
-}
-
-// CreateOrderPayHandler in database
-func CreateOrderPayHandler(orderID uint, payMethod string, totalPrice int64) (uint, error) {
-	orderPay := &model.OrderPay{}
-	orderPay.OrderID = orderID
-	orderPay.PayMethod = payMethod
-	orderPay.TotalPrice = totalPrice
-	if err := db.Create(&orderPay).Error; err != nil {
-		return uint(0), err
-	}
-	return orderPay.ID, nil
-}
-
-// UpdateOrderPayHandler in database
-func UpdateOrderPayHandler(orderID, orderPayID, payEmployeeID uint, payStatus bool, payServiceProvider string) error {
-	orderPay := &model.OrderPay{}
-	orderPay.ID = orderID
-	orderPay.PayStatus = payStatus
-	// If one of these fields is not empty, gorm will update it (struct input regulation)!
-	orderPay.PayEmployeeID = payEmployeeID
-	orderPay.PayServiceProvider = payServiceProvider
-	if err := db.Model(&orderPay).Updates(&orderPay).Error; err != nil {
-		return err
-	}
-	return nil
 }

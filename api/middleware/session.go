@@ -4,9 +4,11 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -15,6 +17,7 @@ import (
 	"github.com/adam-hanna/sessions/store"
 	"github.com/adam-hanna/sessions/transport"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v7"
 )
 
 // SessionJSON is used for marshalling and unmarshalling custom session json information.
@@ -24,14 +27,6 @@ type SessionJSON struct {
 }
 
 var sesh *sessions.Service
-
-// GetUserAuthIDInSession to validate role
-func GetUserAuthIDInSession(c *gin.Context) uint {
-	r := c.Request
-	userSession, _ := sesh.GetUserSession(r)
-	rawUint64, _ := strconv.ParseUint(userSession.UserID, 10, 32)
-	return uint(rawUint64)
-}
 
 // CreateWebSession after login successful
 func CreateWebSession(c *gin.Context, userAuthID uint) {
@@ -74,6 +69,7 @@ func CreateWebSession(c *gin.Context, userAuthID uint) {
 	http.SetCookie(w, &csrfCookie)
 
 	c.JSON(http.StatusOK, gin.H{"status": "Successfully logged in"})
+	return
 }
 
 // ValidateWebSession when user access route with middleware
@@ -92,15 +88,14 @@ func ValidateWebSession() gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
-		log.Printf("In validate; user session expiration before extension: %v\n", userSession.ExpiresAt.UTC())
 
 		myJSON := SessionJSON{}
+
 		if err := json.Unmarshal([]byte(userSession.JSON), &myJSON); err != nil {
 			log.Printf("Err unmarshalling json: %v\n", err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error"})
 			return
 		}
-		log.Printf("In validate; user's custom json: %v\n", myJSON)
 
 		// note: we set the csrf in a cookie, but look for it in request headers
 		csrf := r.Header.Get("X-CSRF-Token")
@@ -116,7 +111,7 @@ func ValidateWebSession() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"status": "Internal Server Error"})
 			return
 		}
-		// log.Printf("In validate; users session expiration after extension: %v\n", userSession.ExpiresAt.UTC())
+		log.Printf("Session validated; users id %v, session expiration after extension: %v\n", userSession.UserID, userSession.ExpiresAt.UTC())
 
 		// need to extend the csrf cookie, too
 		csrfCookie := http.Cookie{
@@ -186,18 +181,32 @@ func ClearWebSession(c *gin.Context) {
 
 	// w.WriteHeader(http.StatusOK)
 	c.JSON(http.StatusOK, gin.H{"status": "Successfully logged out"})
+	return
 }
 
 // RunWebAuth to connect redis server
-func RunWebAuth() {
-	seshStore := store.New(store.Options{})
+func RunWebAuth(sessionKey []byte) error {
+	dsn := os.Getenv("REDIS_DSN")
+	// Check connection
+	client = redis.NewClient(&redis.Options{
+		Addr: dsn, //redis port
+	})
+	_, err := client.Ping().Result()
+	if err != nil {
+		return err
+	}
+	client.Close()
+
+	seshStore := store.New(store.Options{
+		ConnectionAddress: dsn,
+	})
 
 	// e.g. `$ openssl rand -base64 64`
 	seshAuth, err := auth.New(auth.Options{
-		Key: []byte("qV3Dyaji0KpAgO5yTk3tskcwvLFJZk7LTzcptpbc2ecFHI9kM763UTXyexZp/DcXLBr15hz16PjrY6qjn8Xmvw=="),
+		Key: sessionKey,
 	})
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	seshTransport := transport.New(transport.Options{
@@ -206,7 +215,7 @@ func RunWebAuth() {
 	})
 
 	sesh = sessions.New(seshStore, seshAuth, seshTransport, sessions.Options{})
-
+	return nil
 }
 
 // thanks
@@ -217,4 +226,21 @@ func generateKey() (string, error) {
 		return "", err
 	}
 	return base64.URLEncoding.EncodeToString(b), nil
+}
+
+// GetUserAuthIDInSession function
+func GetUserAuthIDInSession(c *gin.Context) (uint, error) {
+	r := c.Request
+	userSession, err := sesh.GetUserSession(r)
+	if err != nil {
+		log.Printf("Err fetching user session: %v\n", err)
+		return uint(0), err
+	}
+	// nil session pointers indicate a 401 unauthorized
+	if userSession == nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return uint(0), errors.New("StatusUnauthorized")
+	}
+	rawUint64, _ := strconv.ParseUint(userSession.UserID, 10, 64)
+	return uint(rawUint64), nil
 }

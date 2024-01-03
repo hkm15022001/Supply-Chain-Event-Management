@@ -7,26 +7,20 @@ import (
 // -------------------- Table in database --------------------
 
 // UserAuthenticate structure for authentication ONLY
-// UserType = 1 for employee
-// UserType = 2 for customer
 type UserAuthenticate struct {
 	gorm.Model `json:"-"`
 	Email      string `json:"email"`
 	Password   string `json:"password"`
-	UserType   int    `json:"user_type"`
+	EmployeeID uint   `json:"emloyee_id"`
+	CustomerID uint   `json:"customer_id"`
 	Active     bool   `gorm:"default:1" json:"active"`
 }
 
-// CustomerFCMToken structure for Firebase Cloud Messaging
-type CustomerFCMToken struct {
-	gorm.Model `json:"-"`
+// UserFCMToken structure for Firebase Cloud Messaging
+type UserFCMToken struct {
+	ID         uint   `gorm:"primary_key;<-:false" json:"id"`
+	UserAuthID uint   `json:"user_auth_id"`
 	CustomerID uint   `json:"customer_id"`
-	Token      string `json:"token"`
-}
-
-// EmployeeFCMToken structure for Firebase Cloud Messaging
-type EmployeeFCMToken struct {
-	gorm.Model `json:"-"`
 	EmployeeID uint   `json:"employee_id"`
 	Token      string `json:"token"`
 }
@@ -42,6 +36,25 @@ type Customer struct {
 	Address    string `json:"address" validate:"nonzero"`
 	Point      int16  `json:"point"`
 	DeletedAt  gorm.DeletedAt
+}
+
+// CustomerCredit structure
+type CustomerCredit struct {
+	ID             uint  `gorm:"primary_key;<-:false" json:"id"`
+	CustomerID     uint  `json:"customer_id"`
+	Phone          int64 `json:"phone"`
+	ValidatePhone  bool  `json:"validate_phone"`
+	AccountBalance int64 `json:"account_balance"`
+	UpdatedAt      int64 `gorm:"autoUpdateTime" json:"updated_at"`
+}
+
+// CustomerNotification structure
+type CustomerNotification struct {
+	ID         uint   `gorm:"primary_key;<-:false" json:"id"`
+	CustomerID uint   `json:"customer_id"`
+	Title      string `json:"title"`
+	Content    string `json:"content"`
+	CreatedAt  int64  `gorm:"autoCreateTime" json:"created_at"`
 }
 
 // Employee structure
@@ -63,7 +76,7 @@ type Employee struct {
 // EmployeeType structure
 type EmployeeType struct {
 	ID   uint   `gorm:"primary_key;<-:false" json:"id"`
-	Name string `validate:"nonzero" json:"name"`
+	Name string `json:"name" validate:"nonzero"`
 }
 
 // DeliveryLocation structure
@@ -73,7 +86,7 @@ type DeliveryLocation struct {
 	District string `json:"district" validate:"nonzero"`
 }
 
-// -------------------- Struct uses to fetch data for frontend --------------------
+// -------------------- Struct uses to fetch data from database --------------------
 
 // EmployeeBasicInfo structure
 type EmployeeBasicInfo struct {
@@ -127,10 +140,18 @@ type EmployeeInfoFetchDB struct {
 	Gender                   string `json:"gender"`
 	Address                  string `json:"address"`
 	IdentityCard             string `json:"identity_card"`
+	EmployeeTypeID           uint   `json:"employee_type_id"`
 	EmployeeTypeName         string `json:"employee_type_name"`
 	Avatar                   string `json:"avatar"`
 	DeliveryLocationCity     string `json:"delivery_location_city"`
 	DeliveryLocationDistrict string `json:"delivery_location_district"`
+}
+
+// EmployeeInfoForShortShip structure
+type EmployeeInfoForShortShip struct {
+	ID                 uint `json:"id"`
+	EmployeeTypeID     uint `json:"employee_type_id" validate:"nonzero"`
+	DeliveryLocationID uint `json:"delivery_location_id"`
 }
 
 // SelectStuct for select options

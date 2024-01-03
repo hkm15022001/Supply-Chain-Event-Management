@@ -6,10 +6,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/lucthienbinh/golang_scem/api/middleware"
-	"github.com/lucthienbinh/golang_scem/api/router"
+	"github.com/hkm12345123/transport_system/api/middleware"
+	"github.com/hkm12345123/transport_system/api/router"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -59,50 +58,46 @@ func RunServer() {
 
 func webRouter() http.Handler {
 	e := gin.Default()
-	if os.Getenv("RUN_WEB_AUTH") == "yes" {
-		config := cors.DefaultConfig()
-		config.AllowOrigins = []string{"http://127.0.0.1:3000"}
-		config.AllowCredentials = true
-		config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "X-CSRF-Token", "Accept"}
-		e.Use(cors.New(config))
-	}
 
 	e.Static("/api/images", os.Getenv("IMAGE_FILE_PATH"))
+	e.Static("/api/qrcode", os.Getenv("QR_CODE_FILE_PATH"))
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	e.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	webAuth := e.Group("/web-auth")
-	router.WebAuthRoutes(webAuth)
-
 	api := e.Group("/api")
+	router.WebAuthRoutes(api)
 	// Active web auth
 	if os.Getenv("RUN_WEB_AUTH") == "yes" {
 		api.Use(middleware.ValidateWebSession())
 	}
-	router.UserRoutes(api)
+	router.WebUserRoutes(api)
 	router.WebOrderRoutes(api)
-	router.ZeebeRoutes(api)
-
+	router.WebOrderShipRoutes(api)
 	return e
 }
 
 func appRouter() http.Handler {
 	e := gin.Default()
-	e.Static("/api/image", "./public/upload/images")
-
-	appAuth := e.Group("/app-auth")
-	router.AppAuthRoutes(appAuth)
+	e.Static("/api/images", os.Getenv("IMAGE_FILE_PATH"))
 
 	fcmAuth := e.Group("/fcm-auth")
 	router.AppFMCToken(fcmAuth)
 
 	api := e.Group("/api")
+	appAuth := e.Group("/app-auth")
 
-	// Active app auth
-	if os.Getenv("RUN_APP_AUTH") == "yes" {
-		api.Use(middleware.ValidateAppToken())
+	// Select app auth database
+	if os.Getenv("RUN_APP_AUTH") == "redis" {
+		router.AppAuthRedisRoutes(appAuth)
+		api.Use(middleware.ValidateAppTokenRedis())
+
+	} else if os.Getenv("RUN_APP_AUTH") == "buntdb" {
+		router.AppAuthBuntDBRoutes(appAuth)
+		api.Use(middleware.ValidateAppTokenBuntDB())
+
 	}
-	router.UserRoutes(api)
-
+	router.AppUserRoutes(api)
+	router.AppOrderRoutes(api)
+	router.AppOrderShipRoutes(api)
 	return e
 }
