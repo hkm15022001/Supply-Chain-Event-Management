@@ -81,9 +81,12 @@ type EmployeeType struct {
 
 // DeliveryLocation structure
 type DeliveryLocation struct {
-	ID       uint   `gorm:"primary_key;<-:false" json:"id"`
-	City     string `json:"city" validate:"nonzero"`
-	District string `json:"district" validate:"nonzero"`
+	ID   uint   `gorm:"primary_key;<-:false" json:"id"`
+	City string `json:"city" validate:"nonzero"`
+	// District  string  `json:"district" validate:"nonzero"`
+	Latitude  float64 `json:"latitude" validate:"nonzero"`
+	Longitude float64 `json:"longitude" validate:"nonzero"`
+	AreaCode  string  `json:"area_code" validate:"nonzero"`
 }
 
 // -------------------- Struct uses to fetch data from database --------------------
@@ -133,18 +136,18 @@ type EmployeeWithAuth struct {
 
 // EmployeeInfoFetchDB structure
 type EmployeeInfoFetchDB struct {
-	ID                       uint   `json:"id"`
-	Name                     string `json:"name"`
-	Age                      uint16 `json:"age"`
-	Phone                    int64  `json:"phone"`
-	Gender                   string `json:"gender"`
-	Address                  string `json:"address"`
-	IdentityCard             string `json:"identity_card"`
-	EmployeeTypeID           uint   `json:"employee_type_id"`
-	EmployeeTypeName         string `json:"employee_type_name"`
-	Avatar                   string `json:"avatar"`
-	DeliveryLocationCity     string `json:"delivery_location_city"`
-	DeliveryLocationDistrict string `json:"delivery_location_district"`
+	ID                   uint   `json:"id"`
+	Name                 string `json:"name"`
+	Age                  uint16 `json:"age"`
+	Phone                int64  `json:"phone"`
+	Gender               string `json:"gender"`
+	Address              string `json:"address"`
+	IdentityCard         string `json:"identity_card"`
+	EmployeeTypeID       uint   `json:"employee_type_id"`
+	EmployeeTypeName     string `json:"employee_type_name"`
+	Avatar               string `json:"avatar"`
+	DeliveryLocationCity string `json:"delivery_location_city"`
+	// DeliveryLocationDistrict string `json:"delivery_location_district"`
 }
 
 // EmployeeInfoForShortShip structure

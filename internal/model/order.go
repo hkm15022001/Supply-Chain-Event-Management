@@ -19,17 +19,19 @@ type OrderInfo struct {
 	CustomerReceiveID uint `json:"customer_receive_id"`
 	EmplCreateID      uint `json:"empl_create_id"`
 	// Delivery information
-	Sender          string `json:"sender" validate:"nonzero"`
-	Receiver        string `json:"receiver" validate:"nonzero"`
-	TransportTypeID uint   `json:"transport_type_id"`
-	Detail          string `json:"detail" validate:"nonzero"`
-	Note            string `json:"note"`
-	TotalPrice      int64  `json:"total_price"`
+	Sender           string `json:"sender" validate:"nonzero"`
+	Receiver         string `json:"receiver" validate:"nonzero"`
+	ReceiversAddress string `json:"receiver_address"`
+	TransportTypeID  uint   `json:"transport_type_id"`
+	Detail           string `json:"detail" validate:"nonzero"`
+	Note             string `json:"note"`
+	TotalPrice       int64  `json:"total_price"`
 	// Long ship and short ship
 	UseLongShip       bool  `json:"use_long_ship"`
 	LongShipID        uint  `json:"long_ship_id"`
 	OrderLongShipID   uint  `json:"order_long_ship_id"`
 	OrderShortShipID  uint  `json:"order_short_ship_id"`
+	LongShipDistance  int64 `json:"long_ship_distance"`
 	ShortShipDistance int64 `json:"short_ship_distance"`
 	// Time information
 	CreatedAt int64 `gorm:"autoCreateTime" json:"created_at"`
@@ -46,7 +48,7 @@ type TransportType struct {
 	// BusStationFrom      string `json:"bus_station_from"`
 	// BusStationTo        string `json:"bus_station_to"`
 	LongShipDuration    int64  `json:"long_ship_duration"`
-	LongShipPricePerKm  int64  `json:"long_ship_price"`
+	LongShipPricePerKm  int64  `json:"long_ship_price" validate:"nonzero"`
 	ServiceType         string `json:"service_type"`
 	ShortShipPricePerKm int64  `json:"short_ship_price_per_km" validate:"nonzero"`
 }

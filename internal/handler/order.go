@@ -196,9 +196,15 @@ func calculateTotalPrice(orderInfo *model.OrderInfo) (int64, error) {
 		return 0, err
 	}
 	var totalPrice int64
-	totalPrice = transportType.ShortShipPricePerKm * orderInfo.ShortShipDistance
+	if orderInfo.UseLongShip != true {
+		totalPrice = transportType.ShortShipPricePerKm * orderInfo.ShortShipDistance
+	}
 	if orderInfo.UseLongShip == true {
-		totalPrice += transportType.LongShipPricePerKm
+		if orderInfo.Weight <= 1 {
+			totalPrice = transportType.LongShipPricePerKm*orderInfo.LongShipDistance + 10000
+		} else {
+			totalPrice = transportType.LongShipPricePerKm*orderInfo.LongShipDistance + 10000 + 5000*orderInfo.Weight
+		}
 	}
 	return totalPrice, nil
 }

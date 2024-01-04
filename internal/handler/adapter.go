@@ -312,35 +312,35 @@ func createCustomerCredit() error {
 }
 
 func createTransportType() error {
-	transportType := &model.TransportType{SameCity: true, LocationOne: "Hà Nội", ShortShipPricePerKm: 30000}
+	transportType := &model.TransportType{SameCity: true, LocationOne: "Hà Nội", ShortShipPricePerKm: 20000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{SameCity: true, LocationOne: "Hà Nội", ShortShipPricePerKm: 26000}
+	transportType = &model.TransportType{SameCity: true, LocationOne: "Bắc Ninh", ShortShipPricePerKm: 26000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Tây Bắc Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 5000, ShortShipPricePerKm: 26000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Tây Bắc Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1150, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Đông Bắc Bộ", LongShipDuration: 86400, ServiceType: "Normal", LongShipPricePerKm: 6000, ShortShipPricePerKm: 30000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Đông Bắc Bộ", LongShipDuration: 86400, ServiceType: "Normal", LongShipPricePerKm: 1250, ShortShipPricePerKm: 20000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Khu vực trung tâm Bắc Bộ", LongShipDuration: 172800, ServiceType: "Express", LongShipPricePerKm: 8000, ShortShipPricePerKm: 26000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Khu vực trung tâm Bắc Bộ", LongShipDuration: 172800, ServiceType: "Express", LongShipPricePerKm: 2500, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Khu vực trung tâm Bắc Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 6500, ShortShipPricePerKm: 26000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Khu vực trung tâm Bắc Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1700, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Bắc Trung Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 5500, ShortShipPricePerKm: 26000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Bắc Trung Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1000, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Duyên Hải Miền Trung", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 5700, ShortShipPricePerKm: 26000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Duyên Hải Miền Trung", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1200, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
@@ -360,54 +360,126 @@ func createLongShip() error {
 }
 
 func createDeliveryLocation() error {
-	location := &model.DeliveryLocation{City: "Hà Nội", District: "1"}
-	if err := db.Create(location).Error; err != nil {
-		return err
+	vietnamCities := []model.DeliveryLocation{
+		{City: "Hà Giang", AreaCode: "0219", Latitude: 23.0219, Longitude: 105.0197}, //AreaCode = Ma vung dien thoai
+		{City: "Cao Bằng", AreaCode: "0206", Latitude: 22.0206, Longitude: 105.7003},
+		{City: "Lào Cai", AreaCode: "0214", Latitude: 22.364, Longitude: 103.633},
+		{City: "Sơn La", AreaCode: "0212", Latitude: 21.0212, Longitude: 103.1126},
+		{City: "Lai Châu", AreaCode: "0213", Latitude: 22.0213, Longitude: 103.0688},
+		{City: "Bắc Kạn", AreaCode: "0209", Latitude: 22.0209, Longitude: 105.9797},
+		{City: "Lạng Sơn", AreaCode: "0205", Latitude: 21.0205, Longitude: 106.7615},
+		{City: "Tuyên Quang", AreaCode: "0207", Latitude: 21.0207, Longitude: 105.8679},
+		{City: "Yên Bái", AreaCode: "0216", Latitude: 21.0216, Longitude: 104.019},
+		{City: "Thái Nguyên", AreaCode: "0208", Latitude: 21.0208, Longitude: 105.5364},
+		{City: "Điện Biên", AreaCode: "0215", Latitude: 21.0215, Longitude: 103.0094},
+		{City: "Phú Thọ", AreaCode: "0210", Latitude: 21.021, Longitude: 105.5346},
+		{City: "Vĩnh Phúc", AreaCode: "0211", Latitude: 21.0211, Longitude: 105.883},
+		{City: "Bắc Giang", AreaCode: "0204", Latitude: 21.0204, Longitude: 106.1996},
+		{City: "Bắc Ninh", AreaCode: "0222", Latitude: 22.0222, Longitude: 106.3406},
+		{City: "Hà Nội", AreaCode: "024", Latitude: 21.028, Longitude: 105.8542},
+		{City: "Quảng Ninh", AreaCode: "0203", Latitude: 20.0203, Longitude: 107.2001},
+		{City: "Hải Dương", AreaCode: "0220", Latitude: 20.022, Longitude: 106.3406},
+		{City: "Hải Phòng", AreaCode: "0225", Latitude: 20.0225, Longitude: 106.6881},
+		{City: "Hòa Bình", AreaCode: "0218", Latitude: 20.0218, Longitude: 105.3372},
+		{City: "Hưng Yên", AreaCode: "0221", Latitude: 20.0221, Longitude: 106.077},
+		{City: "Hà Nam", AreaCode: "0226", Latitude: 20.0226, Longitude: 105.917},
+		{City: "Thái Bình", AreaCode: "0227", Latitude: 20.0227, Longitude: 106.35},
+		{City: "Nam Định", AreaCode: "0228", Latitude: 20.0228, Longitude: 106.168},
+		{City: "Ninh Bình", AreaCode: "0229", Latitude: 20.0229, Longitude: 105.8526},
+		{City: "Thanh Hóa", AreaCode: "0237", Latitude: 20.0237, Longitude: 105.534},
+		{City: "Nghệ An", AreaCode: "0238", Latitude: 19.0238, Longitude: 104.0702},
+		{City: "Hà Tĩnh", AreaCode: "0239", Latitude: 18.0239, Longitude: 105.891},
+		{City: "Quảng Bình", AreaCode: "0232", Latitude: 17.0232, Longitude: 106.0313},
+		{City: "Quảng Trị", AreaCode: "0233", Latitude: 17.0233, Longitude: 106.6527},
+		{City: "Thừa Thiên Huế", AreaCode: "0234", Latitude: 16.0234, Longitude: 107.1867},
+		{City: "Đà Nẵng", AreaCode: "0236", Latitude: 16.0236, Longitude: 108.1997},
+		{City: "Quảng Nam", AreaCode: "0235", Latitude: 15.0235, Longitude: 108.5338},
+		{City: "Quảng Ngãi", AreaCode: "0255", Latitude: 15.0255, Longitude: 108.8006},
+		{City: "Kon Tum", AreaCode: "0260", Latitude: 14.026, Longitude: 107.976},
+		{City: "Gia Lai", AreaCode: "0269", Latitude: 13.0269, Longitude: 108.208},
+		{City: "Bình Định", AreaCode: "0256", Latitude: 13.0256, Longitude: 109.1985},
+		{City: "Phú Yên", AreaCode: "0257", Latitude: 13.0257, Longitude: 109.1985},
+		{City: "Đắk Lắk", AreaCode: "0262", Latitude: 13.0262, Longitude: 108.025},
+		{City: "Khánh Hòa", AreaCode: "0258", Latitude: 12.0258, Longitude: 109.1997},
+		{City: "Đắk Nông", AreaCode: "0261", Latitude: 11.0261, Longitude: 107.509},
+		{City: "Lâm Đồng", AreaCode: "0263", Latitude: 11.0263, Longitude: 108.4997},
+		{City: "Ninh Thuận", AreaCode: "0259", Latitude: 11.0259, Longitude: 108.358},
+		{City: "Bình Phước", AreaCode: "0271", Latitude: 11.0271, Longitude: 106.899},
+		{City: "Tây Ninh", AreaCode: "0276", Latitude: 11.0276, Longitude: 106.199},
+		{City: "Bình Dương", AreaCode: "0274", Latitude: 11.0274, Longitude: 106.694},
+		{City: "Đồng Nai", AreaCode: "0251", Latitude: 11.0251, Longitude: 107.199},
+		{City: "Bình Thuận", AreaCode: "0252", Latitude: 10.0252, Longitude: 108.8128},
+		{City: "Hồ Chí Minh", AreaCode: "028", Latitude: 10.028, Longitude: 106.199},
+		{City: "Long An", AreaCode: "0272", Latitude: 10.0272, Longitude: 105.199},
+		{City: "Bà Rịa – Vũng Tàu", AreaCode: "0254", Latitude: 10.0254, Longitude: 107.199},
+		{City: "Đồng Tháp", AreaCode: "0277", Latitude: 12.0277, Longitude: 105.473},
+		{City: "An Giang", AreaCode: "0296", Latitude: 11.0296, Longitude: 105.5367},
+		{City: "Tiền Giang", AreaCode: "0273", Latitude: 10.0273, Longitude: 106.703},
+		{City: "Vĩnh Long", AreaCode: "0270", Latitude: 10.027, Longitude: 105.647},
+		{City: "Bến Tre", AreaCode: "0275", Latitude: 10.0275, Longitude: 106.538},
+		{City: "Cần Thơ", AreaCode: "0292", Latitude: 10.0292, Longitude: 105.858},
+		{City: "Kiên Giang", AreaCode: "0297", Latitude: 10.0297, Longitude: 105.271},
+		{City: "Trà Vinh", AreaCode: "0294", Latitude: 9.0294, Longitude: 106.428},
+		{City: "Hậu Giang", AreaCode: "0293", Latitude: 9.0293, Longitude: 105.452},
+		{City: "Sóc Trăng", AreaCode: "0299", Latitude: 9.0299, Longitude: 105.362},
+		{City: "Bạc Liêu", AreaCode: "0291", Latitude: 9.0291, Longitude: 105.340},
+		{City: "Cà Mau", AreaCode: "0290", Latitude: 9.029, Longitude: 105.226},
 	}
-	location = &model.DeliveryLocation{City: "Hà Nội", District: "2"}
-	if err := db.Create(location).Error; err != nil {
-		return err
+
+	for _, cityInfor := range vietnamCities {
+		location := &cityInfor
+		if err := db.Create(location).Error; err != nil {
+			return err
+		}
 	}
-	location = &model.DeliveryLocation{City: "Hà Nội", District: "3"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "Hà Nội", District: "Tan Binh"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "Hà Nội", District: "Phu Nhuan"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "DL", District: "1"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "DL", District: "2"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "DL", District: "3"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "DL", District: "4"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "DL", District: "5"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "VT", District: "1"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
-	location = &model.DeliveryLocation{City: "VT", District: "2"}
-	if err := db.Create(location).Error; err != nil {
-		return err
-	}
+	// location := &{City: "Hà Nội", Latitude: 21.0285, Longitude: 105.8542}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "Hà Nội", District: "2"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "Hà Nội", District: "3"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "Hà Nội", District: "Tan Binh"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "Hà Nội", District: "Phu Nhuan"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "DL", District: "1"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "DL", District: "2"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "DL", District: "3"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "DL", District: "4"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "DL", District: "5"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "VT", District: "1"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
+	// location = &{City: "VT", District: "2"}
+	// if err := db.Create(location).Error; err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
@@ -418,7 +490,7 @@ func createExampleOrder() error {
 		Sender:           "Customer One - 269 Ngo Quyen, Quan 5, Hà Nội - 5676765678",
 		Receiver:         "Mai Thi Cuc - 38 Tran Hung Dao, Quan 1, Hà Nội - 6765677867",
 		Detail:           "May vi tinh ca nhan va ban phim may tinh",
-		OrderShortShipID: 1, TransportTypeID: 1, ShortShipDistance: 20,
+		OrderShortShipID: 1, TransportTypeID: 1, LongShipDistance: 20,
 		TotalPrice: 200000, Note: "Giao hang vao buoi sang",
 	}
 	if err := db.Create(orderInfo).Error; err != nil {
@@ -476,7 +548,7 @@ func createExampleOrder2() error {
 		Sender:         "Customer one - 231-233 Le Hong Phong - 6578678678",
 		Receiver:       "Mac Thi Buoi - 74 Phan Chau Trinh, Quan 3, DL - 567865676",
 		Detail:         "May xay thit", UseLongShip: true, LongShipID: 1,
-		OrderShortShipID: 1, TransportTypeID: 3, ShortShipDistance: 20,
+		OrderShortShipID: 1, TransportTypeID: 3, LongShipDistance: 20,
 		TotalPrice: 200000, Note: "Giao hang vao buoi trua",
 	}
 	if err := db.Create(orderInfo).Error; err != nil {

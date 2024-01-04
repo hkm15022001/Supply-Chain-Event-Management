@@ -20,7 +20,7 @@ func GetEmployeeListHandler(c *gin.Context) {
 	employeeInfoList := []model.EmployeeInfoFetchDB{}
 	selectPart := "e.id, e.name, e.age, e.phone, e.gender, e.address, " +
 		"e.identity_card, et.id as employee_type_id, et.name as employee_type_name, e.avatar, " +
-		"dl.city as delivery_location_city, dl.district as delivery_location_district"
+		"dl.city as delivery_location_city"
 	leftJoin1 := "left join employee_types as et on e.employee_type_id = et.id"
 	leftJoin2 := "left join delivery_locations as dl on e.delivery_location_id = dl.id"
 	db.Table("employees as e").Select(selectPart).Joins(leftJoin1).Joins(leftJoin2).
@@ -54,7 +54,7 @@ func GetEmployeeHandler(c *gin.Context) {
 	employeeInfoFetchDB := &model.EmployeeInfoFetchDB{}
 	selectPart := "e.id, e.name, e.age, e.phone, e.gender, e.address, " +
 		"e.identity_card, et.name as employee_type_name, e.avatar, " +
-		"dl.city as delivery_location_city, dl.district as delivery_location_district"
+		"dl.city as delivery_location_city"
 	leftJoin1 := "left join employee_types as et on e.employee_type_id = et.id"
 	leftJoin2 := "left join delivery_locations as dl on e.delivery_location_id = dl.id"
 	if err := db.Table("employees as e").Select(selectPart).Joins(leftJoin1).Joins(leftJoin2).
@@ -108,9 +108,9 @@ func CreateEmployeeFormData(c *gin.Context) {
 
 	deliveryLocationOptions := []model.SelectStuct{}
 	if os.Getenv("SELECT_DATABASE") == "3" {
-		selectPart = "dl.id as value, dl.city || ' - ' || dl.district as label "
+		selectPart = "dl.id as value, dl.city as label "
 	} else {
-		selectPart = "dl.id as value, concat(dl.city, ' - ', dl.district) as label "
+		selectPart = "dl.id as value, dl.city as label "
 	}
 
 	db.Table("delivery_locations as dl").Select(selectPart).Order("dl.id asc").Find(&deliveryLocationOptions)
@@ -176,9 +176,9 @@ func UpdateEmployeeFormData(c *gin.Context) {
 
 	deliveryLocationOptions := []model.SelectStuct{}
 	if os.Getenv("SELECT_DATABASE") == "3" {
-		selectPart = "dl.id as value, dl.city || ' - ' || dl.district as label "
+		selectPart = "dl.id as value, dl.city  as label "
 	} else {
-		selectPart = "dl.id as value, concat(dl.city, ' - ', dl.district) as label "
+		selectPart = "dl.id as value, dl.city as label "
 	}
 	db.Table("delivery_locations as dl").Select(selectPart).Order("dl.id asc").Find(&deliveryLocationOptions)
 	for i := 0; i < len(deliveryLocationOptions); i++ {
