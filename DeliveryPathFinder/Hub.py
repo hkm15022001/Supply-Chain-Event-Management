@@ -9,7 +9,6 @@ class Hub:
         self.count = 0
         self.total_distance = 0
         self.packages_delivered = 0
-        self.wrong_address = []
 
     def get_packages_by_weight(self, packages):
         packages_by_weight = PackagePropertyTable(40)

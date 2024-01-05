@@ -44,9 +44,9 @@ def process_optimize():
 
     # Run-time complexity: O(N) * O(1) = O(N)
     for package in packages:
-        print("Package: ", package.package_id, "with a delivery deadline of: ", package.delivery_deadline, "and special note: ", package.special_note)
-        if package.delivery_deadline != 'EOD':
-            package.priority=True
+        print("Package: ", package.package_id, "and special note: ", package.special_note)
+        # if package.delivery_deadline != 'EOD':
+        #     package.priority=True
         if package.special_note != "":
             package.is_special = True
             note_parts = package.special_note.split(' ')
@@ -87,6 +87,8 @@ def process_optimize():
     # O(N) * (O(1) + O(N^2) + O(N) + O(1)) = O(N^3)
     while len(unloaded_packages) > 0:
         for truck in trucks:
+            if len(unloaded_packages) == 0:
+                break
             # if it's the trucks first iteration
             if truck.current_location == None:
                 # set the trucks starting location
@@ -116,7 +118,7 @@ def process_optimize():
                 # load all packages at this address
                 # run-time complexity O(1)
                 for package in packages_at_stop:
-                    print("Package: ", package.package_id)
+                    print("Package: ", package.package_id, package.location.label)
                     if package.location.label == truck.current_location.label and truck.load_on_truck(package) and package not in loaded_packages:
                         loaded_packages.append(package)
                         unloaded_packages.remove(package)
@@ -131,44 +133,45 @@ def process_optimize():
     trucks[2].start_time = max(min(trucks[0].time, trucks[1].time), Time.get_hours_float('10:20:00'))
     count = 0
     package_ids = []
-    for truck in trucks:
-        print("<------------Deliver Truck: ", truck.truck_id, " PRIORITY packages---------------->")
+    # for truck in trucks:
+    #     print("<------------Deliver Truck: ", truck.truck_id, " PRIORITY packages---------------->")
         
-        packages_by_address = hub.get_packages_by_address(truck.priority_delivery_queue)
-        truck.current_location = distance_graph.hub_vertex
-        # O(N) * O(1) * O(N^2) * O(N) * O(1) = O(N^3)
-        while len(truck.priority_delivery_queue) > 0:
-            # Run-time complexity: O(1)
-            for v in distance_graph.adjacency_list:
-                v.distance = float('inf')
-                v.predecessor = None
-            # Using a simple list so O(N^2) runtime complexity
-            ShortestPath.dijkstra_shortest_path(distance_graph, truck.current_location)
-            # find the location with the next closest distance
-            closest_distance = float('inf')
-            smallest = None
-            # Run-time complexity: O(N)
-            for i in range(0, len(truck.priority_delivery_queue)):
-                if truck.priority_delivery_queue[i].location.distance < closest_distance:
-                    smallest = i
-                    closest_distance = truck.priority_delivery_queue[i].location.distance
-            starting_location = truck.current_location
-            truck.current_location = truck.priority_delivery_queue[smallest].location
-            truck.distance += closest_distance
-            truck.time = truck.start_time + (truck.distance / 40)
-            check_status(truck.time, hub, packages)
-            truck.path.append(ShortestPath.get_shortest_path(starting_location, truck.current_location))
-            # at best run-time complexity O(1) at worst run-time complexity of O(N)
-            for package in packages_by_address.read(truck.current_location.label):
-                if package.location.label == truck.current_location.label:
-                    truck.priority_delivery_queue.remove(package)
-                    package.deliver_package(truck.time)
-                    package_ids.append(package.package_id)
-                    count += 1
-                    print(package, "\n")
+    #     packages_by_address = hub.get_packages_by_address(truck.priority_delivery_queue)
+    #     truck.current_location = distance_graph.hub_vertex
+    #     # O(N) * O(1) * O(N^2) * O(N) * O(1) = O(N^3)
+    #     while len(truck.priority_delivery_queue) > 0:
+    #         # Run-time complexity: O(1)
+    #         for v in distance_graph.adjacency_list:
+    #             v.distance = float('inf')
+    #             v.predecessor = None
+    #         # Using a simple list so O(N^2) runtime complexity
+    #         ShortestPath.dijkstra_shortest_path(distance_graph, truck.current_location)
+    #         # find the location with the next closest distance
+    #         closest_distance = float('inf')
+    #         smallest = None
+    #         # Run-time complexity: O(N)
+    #         for i in range(0, len(truck.priority_delivery_queue)):
+    #             if truck.priority_delivery_queue[i].location.distance < closest_distance:
+    #                 smallest = i
+    #                 closest_distance = truck.priority_delivery_queue[i].location.distance
+    #         starting_location = truck.current_location
+    #         truck.current_location = truck.priority_delivery_queue[smallest].location
+    #         truck.distance += closest_distance
+    #         truck.time = truck.start_time + (truck.distance / 40)
+    #         check_status(truck.time, hub, packages)
+    #         truck.path.append(ShortestPath.get_shortest_path(starting_location, truck.current_location))
+    #         # at best run-time complexity O(1) at worst run-time complexity of O(N)
 
-        truck.time = truck.start_time + (truck.distance / 40)
-        print("<------------Truck: ", truck.truck_id, " PRIORITY packages delivered---------------->\n")
+    #         for package in packages_by_address.read(truck.current_location.label):
+    #             if package.location.label == truck.current_location.label:
+    #                 truck.priority_delivery_queue.remove(package)
+    #                 package.deliver_package(truck.time)
+    #                 package_ids.append(package.package_id)
+    #                 count += 1
+    #                 print(package, "\n")
+
+    #     truck.time = truck.start_time + (truck.distance / 40)
+    #     print("<------------Truck: ", truck.truck_id, " PRIORITY packages delivered---------------->\n")
 
     for truck in trucks:
         print("<------------Deliver Truck: ", truck.truck_id, " packages---------------->")
@@ -196,18 +199,18 @@ def process_optimize():
             truck.time = truck.start_time + (truck.distance / 40)
             check_status(truck.time, hub, packages)
             truck.path.append(ShortestPath.get_shortest_path(starting_location, truck.current_location))
-            if truck.truck_id == 2 and truck.time >= 10.33:
-                package_nine = packages_by_id.read('9')[0]
-                package_nine.delivery_address = 'Haiphong'
-                package_nine.delivery_city = 'Salt Lake City'
-                package_nine.delivery_state = 'UT' 
-                package_nine.zip = '84111'
-                for l in distance_graph.adjacency_list:
-                    if l.label == 'Haiphong':
-                        package_nine.location = l
-                packages_by_address = hub.get_packages_by_address(truck.delivery_queue)
+            # if truck.truck_id == 2 and truck.time >= 10.33:
+            #     package_nine = packages_by_id.read('9')[0]
+            #     package_nine.delivery_address = 'Hải Phòng'
+            #     for l in distance_graph.adjacency_list:
+            #         if l.label == 'Hải Phòng':
+            #             package_nine.location = l
+            #     packages_by_address = hub.get_packages_by_address(truck.delivery_queue)
             
             # run-time complexity O(1)
+            if len(packages_by_address.read(truck.current_location.label)) == 0:
+                print("Loi 4")
+                return
             for package in packages_by_address.read(truck.current_location.label):
                 if package.location.label == truck.current_location.label:
                     truck.delivery_queue.remove(package)
@@ -242,9 +245,6 @@ def process_optimize():
             ", truck: ", package.truck_id,
             ", status: delivered",
             ", address: ", package.delivery_address,
-            ", deadline: ", package.delivery_deadline,
-            ", city: ", package.delivery_city,
-            ", zip: ", package.delivery_zip,
             ", weight: ", package.package_weight,
             ", time delivered: ", Time.get_formatted_time(package.arrival_time)
             )
@@ -256,9 +256,6 @@ def process_optimize():
             ", truck: ", package.truck_id,
             ", status: undelivered",
             ", address: ", package.delivery_address,
-            ", deadline: ", package.delivery_deadline,
-            ", city: ", package.delivery_city,
-            ", zip: ", package.delivery_zip,
             ", weight: ", package.package_weight,
             ", time delivered: ", Time.get_formatted_time(package.arrival_time)
 

@@ -87,6 +87,7 @@ type DeliveryLocation struct {
 	Latitude  float64 `json:"latitude" validate:"nonzero"`
 	Longitude float64 `json:"longitude" validate:"nonzero"`
 	AreaCode  string  `json:"area_code" validate:"nonzero"`
+	Region    string  `json:"region"`
 }
 
 // -------------------- Struct uses to fetch data from database --------------------

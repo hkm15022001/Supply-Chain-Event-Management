@@ -8,22 +8,19 @@ from Location import Location
 
 hub = Hub()
 
-# with open(Path(__file__).parent/'Data/Packages.csv', mode='r') as packages:    
-with open(Path(__file__).parent/'Data/updated_package.csv', mode='r') as packages:
+with open(Path(__file__).parent/'Data/updated_package.csv', mode='r',encoding='utf-8') as packages:
     package_list = hub.package_list
     package_reader = csv.reader(packages, delimiter=',')
     count = 0
     for row in package_reader:
         if count > 0:
             package_id = int(row[0])
-            package = Package(package_id=row[0], package_weight=row[6], special_note=row[7],
-                                    delivery_address=row[1], delivery_city=row[2], delivery_zip=row[4],
-                                    delivery_deadline=row[5], delivery_state=row[3])
+            package = Package(package_id=row[0], package_weight=row[2], special_note=row[3],
+                                    delivery_address=row[1])
             package_list[package_id - 1] = package
         count += 1
 
-# with open(Path(__file__).parent/'Data/Distances.csv', mode='r') as distances:
-with open(Path(__file__).parent/'Data/distance_matrix.csv', mode='r') as distances:
+with open(Path(__file__).parent/'Data/distance_matrix1.csv', mode='r',encoding='utf-8') as distances:
     distance_graph = DistanceGraph()
     distance_reader = csv.reader(distances, delimiter=',')
     count = 0
@@ -35,7 +32,7 @@ with open(Path(__file__).parent/'Data/distance_matrix.csv', mode='r') as distanc
             # address = str(row[1])[1:-8]
             location = Location(address)
 
-            if location.label == "Hanoi":
+            if location.label == "Hà Nội":
                 location.label = 'hub'
                 distance_graph.hub_vertex = location
             distance_graph.add_vertex(location)
@@ -43,25 +40,17 @@ with open(Path(__file__).parent/'Data/distance_matrix.csv', mode='r') as distanc
                 if package.delivery_address == location.label:
                     package.location = location 
 
-            for path in range(2, len(row)):
+            for path in range(3, len(row)):
                 if row[path] == '0.0':
                     break
                 else:
-                    # print("v.label: ", location.label)
-                    v = list(distance_graph.adjacency_list.keys())[path - 2]
-                    # print("secondV_label: ", v.label)
-                    # print("weight: ", str(float(row[path])))
+                    v = list(distance_graph.adjacency_list.keys())[path - 3]
+                   
                     distance_graph.add_undirected_edge(location
-                                                       , list(distance_graph.adjacency_list.keys())[path - 2]
+                                                       , list(distance_graph.adjacency_list.keys())[path - 3]
                                                        , float(row[path]))
 
         count += 1
-    print("##############################")
-    print(count)
-    for v in distance_graph.adjacency_list:
-        print("v.label: ", v.label)
-        print("v.distance: ", v.distance)
-        print("v.predecessor: ", v.predecessor)
 
 def load_packages():
     return package_list
