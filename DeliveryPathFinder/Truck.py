@@ -3,7 +3,7 @@ from PackagePropertyTable import PackagePropertyTable
 class Truck:
 
     def __init__(self, truck_id, driver=""):
-        self.MAX_LOAD = 16
+        self.MAX_LOAD = 20
         self.AVG_MPH = 18
         self.driver = driver
         self.delivery_queue = []
@@ -16,6 +16,7 @@ class Truck:
         self.path = []
         self.current_location = None
         self.start_time = 0
+        self.skip = False
 
     def __str__(self):
         return ('Truck ID: ' + self.truck_id.__str__()
@@ -30,7 +31,7 @@ class Truck:
                 )
 
     def load_on_truck(self, package):
-        if self.package_count < 16:
+        if self.package_count < self.MAX_LOAD:
             package.delivery_status = 'loaded'
             package.truck_id = self.truck_id
             if package.priority:
