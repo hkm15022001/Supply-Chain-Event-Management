@@ -142,7 +142,7 @@ def process_optimize():
             starting_location = truck.current_location
             truck.current_location = truck.delivery_queue[smallest].location
             truck.distance += closest_distance
-            truck.time = truck.start_time + (truck.distance / 40)
+            truck.time = truck.start_time + (truck.distance / truck.AVG_MPH)
             check_status(truck.time, hub, packages)
             truck.path.append(ShortestPath.get_shortest_path(starting_location, truck.current_location))
 
@@ -154,7 +154,7 @@ def process_optimize():
                     count += 1
                     print(package, "\n")
 
-        truck.time = truck.start_time + (truck.distance / 40)
+        truck.time = truck.start_time + (truck.distance / truck.AVG_MPH)
         print("<------------Truck: ", truck.truck_id, " packages delivered---------------->\n")
 
     # report time finished and distance of each truck and total distance of all trucks

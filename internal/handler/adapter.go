@@ -320,27 +320,39 @@ func createTransportType() error {
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Tây Bắc Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1150, ShortShipPricePerKm: 16000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Bắc Bộ", ServiceType: "Normal", LongShipPricePerKm: 1150, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Đông Bắc Bộ", LongShipDuration: 86400, ServiceType: "Normal", LongShipPricePerKm: 1250, ShortShipPricePerKm: 20000}
+	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Bắc Bộ", ServiceType: "Express", LongShipPricePerKm: 2550, ShortShipPricePerKm: 20000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Khu vực trung tâm Bắc Bộ", LongShipDuration: 172800, ServiceType: "Express", LongShipPricePerKm: 2500, ShortShipPricePerKm: 16000}
+	transportType = &model.TransportType{LocationOne: "Đà Nẵng", LocationTwo: "Trung Bộ", ServiceType: "Express", LongShipPricePerKm: 2220, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Khu vực trung tâm Bắc Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1700, ShortShipPricePerKm: 16000}
+	transportType = &model.TransportType{LocationOne: "Đà Nẵng", LocationTwo: "Trung Bộ", ServiceType: "Normal", LongShipPricePerKm: 1050, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Bắc Trung Bộ", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1000, ShortShipPricePerKm: 16000}
+	transportType = &model.TransportType{LocationOne: "Đà Nẵng", LocationTwo: "Tây Nguyên", ServiceType: "Normal", LongShipPricePerKm: 1000, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
-	transportType = &model.TransportType{LocationOne: "Hà Nội", LocationTwo: "Duyên Hải Miền Trung", LongShipDuration: 172800, ServiceType: "Normal", LongShipPricePerKm: 1200, ShortShipPricePerKm: 16000}
+	transportType = &model.TransportType{LocationOne: "Hồ Chí Minh", LocationTwo: "Nam Bộ", ServiceType: "Normal", LongShipPricePerKm: 1200, ShortShipPricePerKm: 16000}
+	if err := db.Create(transportType).Error; err != nil {
+		return err
+	}
+	transportType = &model.TransportType{LocationOne: "Hồ Chí Minh", LocationTwo: "Nam Bộ", ServiceType: "Express", LongShipPricePerKm: 2600, ShortShipPricePerKm: 16000}
+	if err := db.Create(transportType).Error; err != nil {
+		return err
+	}
+	transportType = &model.TransportType{LocationOne: "Hồ Chí Minh", LocationTwo: "Đồng Bằng Sông Cửu Long", ServiceType: "Normal", LongShipPricePerKm: 1270, ShortShipPricePerKm: 17000}
+	if err := db.Create(transportType).Error; err != nil {
+		return err
+	}
+	transportType = &model.TransportType{LocationOne: "Hồ Chí Minh", LocationTwo: "Đồng Bằng Sông Cửu Longộ", ServiceType: "Express", LongShipPricePerKm: 2650, ShortShipPricePerKm: 16000}
 	if err := db.Create(transportType).Error; err != nil {
 		return err
 	}
@@ -386,32 +398,32 @@ func createDeliveryLocation() error {
 		{City: "Thái Bình", AreaCode: "0227", Latitude: 20.4556, Longitude: 106.3319, Region: "Bắc Bộ"},
 		{City: "Nam Định", AreaCode: "0228", Latitude: 20.4267, Longitude: 106.165, Region: "Bắc Bộ"},
 		{City: "Ninh Bình", AreaCode: "0229", Latitude: 20.2544, Longitude: 105.975, Region: "Bắc Bộ"},
-		{City: "Thanh Hóa", AreaCode: "0237", Latitude: 19.8066, Longitude: 105.7667, Region: "Bắc Trung Bộ"},
-		{City: "Nghệ An", AreaCode: "0238", Latitude: 18.8236, Longitude: 105.6328, Region: "Bắc Trung Bộ"},
-		{City: "Hà Tĩnh", AreaCode: "0239", Latitude: 18.3333, Longitude: 105.9, Region: "Bắc Trung Bộ"},
-		{City: "Quảng Bình", AreaCode: "0232", Latitude: 17.5364, Longitude: 106.5174, Region: "Bắc Trung Bộ"},
-		{City: "Quảng Trị", AreaCode: "0233", Latitude: 16.75, Longitude: 107.2, Region: "Bắc Trung Bộ"},
-		{City: "Thừa Thiên Huế", AreaCode: "0234", Latitude: 16.4633, Longitude: 107.5956, Region: "Bắc Trung Bộ"},
-		{City: "Đà Nẵng", AreaCode: "0236", Latitude: 16.0544, Longitude: 108.2022, Region: "Bắc Trung Bộ"},
-		{City: "Quảng Nam", AreaCode: "0235", Latitude: 15.8801, Longitude: 108.3385, Region: "Bắc Trung Bộ"},
-		{City: "Quảng Ngãi", AreaCode: "0255", Latitude: 15.1201, Longitude: 108.798, Region: "Bắc Trung Bộ"},
+		{City: "Thanh Hóa", AreaCode: "0237", Latitude: 19.8066, Longitude: 105.7667, Region: "Trung Bộ"},
+		{City: "Nghệ An", AreaCode: "0238", Latitude: 18.8236, Longitude: 105.6328, Region: "Trung Bộ"},
+		{City: "Hà Tĩnh", AreaCode: "0239", Latitude: 18.3333, Longitude: 105.9, Region: "Trung Bộ"},
+		{City: "Quảng Bình", AreaCode: "0232", Latitude: 17.5364, Longitude: 106.5174, Region: "Trung Bộ"},
+		{City: "Quảng Trị", AreaCode: "0233", Latitude: 16.75, Longitude: 107.2, Region: "Trung Bộ"},
+		{City: "Thừa Thiên Huế", AreaCode: "0234", Latitude: 16.4633, Longitude: 107.5956, Region: "Trung Bộ"},
+		{City: "Đà Nẵng", AreaCode: "0236", Latitude: 16.0544, Longitude: 108.2022, Region: "Trung Bộ"},
+		{City: "Quảng Nam", AreaCode: "0235", Latitude: 15.8801, Longitude: 108.3385, Region: "Trung Bộ"},
+		{City: "Quảng Ngãi", AreaCode: "0255", Latitude: 15.1201, Longitude: 108.798, Region: "Trung Bộ"},
 		{City: "Kon Tum", AreaCode: "0260", Latitude: 14.3544, Longitude: 107.9833, Region: "Tây Nguyên"},
 		{City: "Gia Lai", AreaCode: "0269", Latitude: 13.9833, Longitude: 108.2167, Region: "Tây Nguyên"},
-		{City: "Bình Định", AreaCode: "0256", Latitude: 14.25, Longitude: 109.2, Region: "Nam Trung Bộ"},
-		{City: "Phú Yên", AreaCode: "0257", Latitude: 13.1667, Longitude: 109.1667, Region: "Nam Trung Bộ"},
+		{City: "Bình Định", AreaCode: "0256", Latitude: 14.25, Longitude: 109.2, Region: "Trung Bộ"},
+		{City: "Phú Yên", AreaCode: "0257", Latitude: 13.1667, Longitude: 109.1667, Region: "Trung Bộ"},
 		{City: "Đắk Lắk", AreaCode: "0262", Latitude: 12.8333, Longitude: 108.05, Region: "Tây Nguyên"},
-		{City: "Khánh Hòa", AreaCode: "0258", Latitude: 12.25, Longitude: 109.2, Region: "Nam Trung Bộ"},
+		{City: "Khánh Hòa", AreaCode: "0258", Latitude: 12.25, Longitude: 109.2, Region: "Trung Bộ"},
 		{City: "Đắk Nông", AreaCode: "0261", Latitude: 12.25, Longitude: 107.8, Region: "Tây Nguyên"},
 		{City: "Lâm Đồng", AreaCode: "0263", Latitude: 11.5, Longitude: 108.8333, Region: "Tây Nguyên"},
-		{City: "Ninh Thuận", AreaCode: "0259", Latitude: 11.75, Longitude: 108.3667, Region: "Nam Trung Bộ"},
-		{City: "Bình Phước", AreaCode: "0271", Latitude: 11.75, Longitude: 106.75, Region: "Đông Nam Bộ"},
-		{City: "Tây Ninh", AreaCode: "0276", Latitude: 11.3333, Longitude: 106.2, Region: "Đông Nam Bộ"},
-		{City: "Bình Dương", AreaCode: "0274", Latitude: 11.1667, Longitude: 106.6667, Region: "Đông Nam Bộ"},
-		{City: "Đồng Nai", AreaCode: "0251", Latitude: 11.1667, Longitude: 107.1667, Region: "Đông Nam Bộ"},
-		{City: "Bình Thuận", AreaCode: "0252", Latitude: 10.9333, Longitude: 108.1, Region: "Nam Trung Bộ"},
-		{City: "Hồ Chí Minh", AreaCode: "028", Latitude: 10.7769, Longitude: 106.7009, Region: "Đông Nam Bộ"},
+		{City: "Ninh Thuận", AreaCode: "0259", Latitude: 11.75, Longitude: 108.3667, Region: "Trung Bộ"},
+		{City: "Bình Phước", AreaCode: "0271", Latitude: 11.75, Longitude: 106.75, Region: "Nam Bộ"},
+		{City: "Tây Ninh", AreaCode: "0276", Latitude: 11.3333, Longitude: 106.2, Region: "Nam Bộ"},
+		{City: "Bình Dương", AreaCode: "0274", Latitude: 11.1667, Longitude: 106.6667, Region: "Nam Bộ"},
+		{City: "Đồng Nai", AreaCode: "0251", Latitude: 11.1667, Longitude: 107.1667, Region: "Nam Bộ"},
+		{City: "Bình Thuận", AreaCode: "0252", Latitude: 10.9333, Longitude: 108.1, Region: "Trung Bộ"},
+		{City: "Hồ Chí Minh", AreaCode: "028", Latitude: 10.7769, Longitude: 106.7009, Region: "Nam Bộ"},
 		{City: "Long An", AreaCode: "0272", Latitude: 10.6667, Longitude: 106, Region: "Đồng Bằng Sông Cửu Long"},
-		{City: "Bà Rịa – Vũng Tàu", AreaCode: "0254", Latitude: 10.4091, Longitude: 107.1386, Region: "Đông Nam Bộ"},
+		{City: "Bà Rịa – Vũng Tàu", AreaCode: "0254", Latitude: 10.4091, Longitude: 107.1386, Region: "Nam Bộ"},
 		{City: "Đồng Tháp", AreaCode: "0277", Latitude: 10.6667, Longitude: 105.6667, Region: "Đồng Bằng Sông Cửu Long"},
 		{City: "An Giang", AreaCode: "0296", Latitude: 10.5, Longitude: 105.1667, Region: "Đồng Bằng Sông Cửu Long"},
 		{City: "Tiền Giang", AreaCode: "0273", Latitude: 10.3547, Longitude: 106.3406, Region: "Đồng Bằng Sông Cửu Long"},

@@ -79,7 +79,6 @@ func UpdateTransportTypeHandler(c *gin.Context) {
 		"location_two": transportType.LocationTwo,
 		// "bus_station_from":        transportType.BusStationFrom,
 		// "bus_station_to":          transportType.BusStationTo,
-		"long_ship_duration":      transportType.LongShipDuration,
 		"long_ship_price":         transportType.LongShipPricePerKm,
 		"short_ship_price_per_km": transportType.ShortShipPricePerKm,
 	}

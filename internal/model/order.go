@@ -47,8 +47,8 @@ type TransportType struct {
 	LocationTwo string `json:"location_two"`
 	// BusStationFrom      string `json:"bus_station_from"`
 	// BusStationTo        string `json:"bus_station_to"`
-	LongShipDuration    int64  `json:"long_ship_duration"`
-	LongShipPricePerKm  int64  `json:"long_ship_price" validate:"nonzero"`
+	// LongShipDuration    int64  `json:"long_ship_duration"`
+	LongShipPricePerKm  int64  `json:"long_ship_price"`
 	ServiceType         string `json:"service_type"`
 	ShortShipPricePerKm int64  `json:"short_ship_price_per_km" validate:"nonzero"`
 }

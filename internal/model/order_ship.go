@@ -34,7 +34,7 @@ type LongShip struct {
 	TransportTypeID          uint   `json:"transport_type_id" validate:"nonzero"`
 	LicensePlate             string `json:"license_plate" validate:"nonzero"`
 	EstimatedTimeOfDeparture int64  `json:"estimated_time_of_departure" validate:"nonzero"`
-	EstimatedTimeOfArrival   int64  `json:"estimated_time_of_arrival" validate:"nonzero"`
+	EstimatedTimeOfArrival   int64  `json:"estimated_time_of_arrival"`
 	CurrentLocation          string `json:"current_location"`
 	// Message data in workflow - Start
 	// Package Loaded
