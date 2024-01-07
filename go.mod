@@ -1,4 +1,4 @@
-module github.com/hkm12345123/transport_system
+module github.com/hkm15022001/Supply-Chain-Event-Management
 
 go 1.19
 

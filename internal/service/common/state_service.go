@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hkm12345123/transport_system/internal/model"
-	SSWorkflow "github.com/hkm12345123/transport_system/internal/service/state_scem/workflow"
-	ZBWorkflow "github.com/hkm12345123/transport_system/internal/service/zeebe/workflow"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/model"
+	SSWorkflow "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/state_scem/workflow"
+	ZBWorkflow "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/workflow"
 )
 
 ///////////////////////////////////////// CREATE INSTANCE /////////////////////////////////////////

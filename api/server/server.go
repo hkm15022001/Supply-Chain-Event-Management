@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hkm12345123/transport_system/api/middleware"
-	"github.com/hkm12345123/transport_system/api/router"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/api/middleware"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/api/router"
 	"golang.org/x/sync/errgroup"
 )
 

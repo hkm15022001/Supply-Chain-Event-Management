@@ -11,9 +11,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/hkm12345123/transport_system/internal/model"
-	CommonService "github.com/hkm12345123/transport_system/internal/service/common"
-	CommonMessage "github.com/hkm12345123/transport_system/internal/service/common_message"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/model"
+	CommonService "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
+	CommonMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common_message"
 	qrcode "github.com/skip2/go-qrcode"
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/validator.v2"

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	CommonService "github.com/hkm12345123/transport_system/internal/service/common"
+	CommonService "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
 )
 
 // LongShipFinished send mesage to zeebe engine

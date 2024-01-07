@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hkm12345123/transport_system/internal/handler"
-	ServiceCommon "github.com/hkm12345123/transport_system/internal/service/common"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/handler"
+	ServiceCommon "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
 )
 
 // WebOrderShipRoutes to manage user model

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hkm12345123/transport_system/internal/model"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/model"
 	"gopkg.in/validator.v2"
 )
 

@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/hkm12345123/transport_system/internal/model"
-	CommonService "github.com/hkm12345123/transport_system/internal/service/common"
-	CommonMessage "github.com/hkm12345123/transport_system/internal/service/common_message"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/model"
+	CommonService "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
+	CommonMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common_message"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 )

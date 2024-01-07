@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	ZBMessage "github.com/hkm12345123/transport_system/internal/service/zeebe/message"
+	ZBMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/message"
 )
 
 ///////////////////////////////////////// PUBLISH MESSAGE /////////////////////////////////////////

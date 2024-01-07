@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hkm12345123/transport_system/internal/model"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/model"
 	"github.com/gin-gonic/gin"
 )
 
