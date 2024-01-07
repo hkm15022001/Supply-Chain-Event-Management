@@ -4,14 +4,14 @@ import (
 	"log"
 	"os"
 
-	"github.com/hkm12345123/transport_system/api/middleware"
-	"github.com/hkm12345123/transport_system/api/server"
-	"github.com/hkm12345123/transport_system/internal/handler"
-	CommonService "github.com/hkm12345123/transport_system/internal/service/common"
-	CommonMessage "github.com/hkm12345123/transport_system/internal/service/common_message"
-	ZBMessage "github.com/hkm12345123/transport_system/internal/service/zeebe/message"
-	ZBWorker "github.com/hkm12345123/transport_system/internal/service/zeebe/worker"
-	ZBWorkflow "github.com/hkm12345123/transport_system/internal/service/zeebe/workflow"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/api/middleware"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/api/server"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/handler"
+	CommonService "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
+	CommonMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common_message"
+	ZBMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/message"
+	ZBWorker "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/worker"
+	ZBWorkflow "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/workflow"
 	"github.com/joho/godotenv"
 )
 
