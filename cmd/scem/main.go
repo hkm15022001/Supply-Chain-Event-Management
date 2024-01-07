@@ -12,16 +12,17 @@ import (
 	ZBMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/message"
 	ZBWorker "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/worker"
 	ZBWorkflow "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/workflow"
+
 	"github.com/joho/godotenv"
 )
 
 func main() {
- 	if os.Getenv("RUNENV") != "docker" {
+	if os.Getenv("RUNENV") != "docker" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatal("Error loading .env file")
 		}
-	}	
+	}
 
 	// Initial web auth middleware
 	if os.Getenv("RUN_WEB_AUTH") == "yes" {
