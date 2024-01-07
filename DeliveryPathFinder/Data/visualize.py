@@ -35,5 +35,5 @@ def visualize(paths):
             folium.PolyLine(locations=[start_location, end_location], color=colors[idx]).add_to(m)
 
     # Lưu bản đồ vào một file HTML để xem
-    m.save("route_map.html")
+    m.save("templates/route_map.html")
     print("save route!!")

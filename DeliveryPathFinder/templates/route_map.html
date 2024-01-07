@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_0239f5bcccedc5768f35062a7e48dbca {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_0239f5bcccedc5768f35062a7e48dbca" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_0239f5bcccedc5768f35062a7e48dbca = L.map(
+                "map_0239f5bcccedc5768f35062a7e48dbca",
+                {
+                    center: [16.083025396825395, 106.39553015873015],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 7,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_e968eb3022274bdd7e8f48f9a66e0a41 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_e968eb3022274bdd7e8f48f9a66e0a41.addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_518a1023462b16d2d5ff90b5e9584f0f = L.marker(
+                [21.0285, 105.8542],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_9cb439dec4a9113e6f99e49be8e97fdf = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_d17677dd49f39df7260ffe0885f36e33 = $(`<div id="html_d17677dd49f39df7260ffe0885f36e33" style="width: 100.0%; height: 100.0%;">Hà Nội</div>`)[0];
+                popup_9cb439dec4a9113e6f99e49be8e97fdf.setContent(html_d17677dd49f39df7260ffe0885f36e33);
+            
+        
+
+        marker_518a1023462b16d2d5ff90b5e9584f0f.bindPopup(popup_9cb439dec4a9113e6f99e49be8e97fdf)
+        ;
+
+        
+    
+    
+            var marker_8df29d5465e9623c118ecc9991c6ef3c = L.marker(
+                [21.1861, 106.075],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_7f55089f56d5cf149e36465b657ba40a = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_753bb0918b854509c1370cf0c1e06f7b = $(`<div id="html_753bb0918b854509c1370cf0c1e06f7b" style="width: 100.0%; height: 100.0%;">Bắc Ninh</div>`)[0];
+                popup_7f55089f56d5cf149e36465b657ba40a.setContent(html_753bb0918b854509c1370cf0c1e06f7b);
+            
+        
+
+        marker_8df29d5465e9623c118ecc9991c6ef3c.bindPopup(popup_7f55089f56d5cf149e36465b657ba40a)
+        ;
+
+        
+    
+    
+            var poly_line_4b561f129ae442910b4bc0b0518fc37b = L.polyline(
+                [[21.0285, 105.8542], [21.1861, 106.075]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_c695345f28f9df1ee564bf396f5894ba = L.marker(
+                [21.1861, 106.075],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_578939640248c5e8b9a86eaf76c08684 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_685d1a946fff43ed5224448cca718ec5 = $(`<div id="html_685d1a946fff43ed5224448cca718ec5" style="width: 100.0%; height: 100.0%;">Bắc Ninh</div>`)[0];
+                popup_578939640248c5e8b9a86eaf76c08684.setContent(html_685d1a946fff43ed5224448cca718ec5);
+            
+        
+
+        marker_c695345f28f9df1ee564bf396f5894ba.bindPopup(popup_578939640248c5e8b9a86eaf76c08684)
+        ;
+
+        
+    
+    
+            var marker_332b90fb0eb048f558eaf4170e70e7cf = L.marker(
+                [21.2667, 106.2],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_191b2fc3bad6bf838fc4c78e5767ed8d = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_50b7d81e3137a7a93aff7c5ca4a8e119 = $(`<div id="html_50b7d81e3137a7a93aff7c5ca4a8e119" style="width: 100.0%; height: 100.0%;">Bắc Giang</div>`)[0];
+                popup_191b2fc3bad6bf838fc4c78e5767ed8d.setContent(html_50b7d81e3137a7a93aff7c5ca4a8e119);
+            
+        
+
+        marker_332b90fb0eb048f558eaf4170e70e7cf.bindPopup(popup_191b2fc3bad6bf838fc4c78e5767ed8d)
+        ;
+
+        
+    
+    
+            var poly_line_5ea20d0276b098c4436f85a821a8995a = L.polyline(
+                [[21.1861, 106.075], [21.2667, 106.2]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_140c560d269c97c15d5c350310b91937 = L.marker(
+                [21.2667, 106.2],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_6c08f81e1d2b5ac14a33b633b9581002 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_3d74557fef13170d1e00b7ef1427a5c1 = $(`<div id="html_3d74557fef13170d1e00b7ef1427a5c1" style="width: 100.0%; height: 100.0%;">Bắc Giang</div>`)[0];
+                popup_6c08f81e1d2b5ac14a33b633b9581002.setContent(html_3d74557fef13170d1e00b7ef1427a5c1);
+            
+        
+
+        marker_140c560d269c97c15d5c350310b91937.bindPopup(popup_6c08f81e1d2b5ac14a33b633b9581002)
+        ;
+
+        
+    
+    
+            var marker_616513e8427a361840529a42df502780 = L.marker(
+                [20.9333, 106.3333],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_a427e140d417faa299fc3de8f1b139a1 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_182f5fd8acee7802a7b59e89c6554dfc = $(`<div id="html_182f5fd8acee7802a7b59e89c6554dfc" style="width: 100.0%; height: 100.0%;">Hải Dương</div>`)[0];
+                popup_a427e140d417faa299fc3de8f1b139a1.setContent(html_182f5fd8acee7802a7b59e89c6554dfc);
+            
+        
+
+        marker_616513e8427a361840529a42df502780.bindPopup(popup_a427e140d417faa299fc3de8f1b139a1)
+        ;
+
+        
+    
+    
+            var poly_line_5ce0d69c4ec114e90179f9eeb221ca53 = L.polyline(
+                [[21.2667, 106.2], [20.9333, 106.3333]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_37917bf5c3753718db7cfa9bef94ca5d = L.marker(
+                [20.9333, 106.3333],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_e71fc0f043842f7e99f84e6ab7282948 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_af1d6141b86843f4723794bc76208515 = $(`<div id="html_af1d6141b86843f4723794bc76208515" style="width: 100.0%; height: 100.0%;">Hải Dương</div>`)[0];
+                popup_e71fc0f043842f7e99f84e6ab7282948.setContent(html_af1d6141b86843f4723794bc76208515);
+            
+        
+
+        marker_37917bf5c3753718db7cfa9bef94ca5d.bindPopup(popup_e71fc0f043842f7e99f84e6ab7282948)
+        ;
+
+        
+    
+    
+            var marker_2c9ae9ea4bf08663890dce93f407581b = L.marker(
+                [20.8481, 106.6883],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_5a78a73eb530cb5aa8a3aa4d4b57d9bb = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_e1f28887f76f1c2789c8104e3bf7519f = $(`<div id="html_e1f28887f76f1c2789c8104e3bf7519f" style="width: 100.0%; height: 100.0%;">Hải Phòng</div>`)[0];
+                popup_5a78a73eb530cb5aa8a3aa4d4b57d9bb.setContent(html_e1f28887f76f1c2789c8104e3bf7519f);
+            
+        
+
+        marker_2c9ae9ea4bf08663890dce93f407581b.bindPopup(popup_5a78a73eb530cb5aa8a3aa4d4b57d9bb)
+        ;
+
+        
+    
+    
+            var poly_line_2b9bc0bd6f67cb9d2c1307b6510bb6fb = L.polyline(
+                [[20.9333, 106.3333], [20.8481, 106.6883]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_a854e77d88b42853a5c02887fa8e615f = L.marker(
+                [20.8481, 106.6883],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_eb0c491c9cb825cb77bd1078dd135e1b = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_b51e8ab363d6d09381d4ad251e8d6f28 = $(`<div id="html_b51e8ab363d6d09381d4ad251e8d6f28" style="width: 100.0%; height: 100.0%;">Hải Phòng</div>`)[0];
+                popup_eb0c491c9cb825cb77bd1078dd135e1b.setContent(html_b51e8ab363d6d09381d4ad251e8d6f28);
+            
+        
+
+        marker_a854e77d88b42853a5c02887fa8e615f.bindPopup(popup_eb0c491c9cb825cb77bd1078dd135e1b)
+        ;
+
+        
+    
+    
+            var marker_e807acac9dea78ea8c501592d2d364e8 = L.marker(
+                [20.9531, 107.0656],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_30591e534c0a98f1ba8392f2466ffe6d = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_84ab9ee78ea5b5e052f19709737b7874 = $(`<div id="html_84ab9ee78ea5b5e052f19709737b7874" style="width: 100.0%; height: 100.0%;">Quảng Ninh</div>`)[0];
+                popup_30591e534c0a98f1ba8392f2466ffe6d.setContent(html_84ab9ee78ea5b5e052f19709737b7874);
+            
+        
+
+        marker_e807acac9dea78ea8c501592d2d364e8.bindPopup(popup_30591e534c0a98f1ba8392f2466ffe6d)
+        ;
+
+        
+    
+    
+            var poly_line_4b7199bb4d72a2e327e19352ff8c57dc = L.polyline(
+                [[20.8481, 106.6883], [20.9531, 107.0656]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_9358029e5894f9d937a9457699254fea = L.marker(
+                [21.0285, 105.8542],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_7de60249a26831af55ac52eda7e7ff0e = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_4612a4b6ef6ce4077014e6fa732203a9 = $(`<div id="html_4612a4b6ef6ce4077014e6fa732203a9" style="width: 100.0%; height: 100.0%;">Hà Nội</div>`)[0];
+                popup_7de60249a26831af55ac52eda7e7ff0e.setContent(html_4612a4b6ef6ce4077014e6fa732203a9);
+            
+        
+
+        marker_9358029e5894f9d937a9457699254fea.bindPopup(popup_7de60249a26831af55ac52eda7e7ff0e)
+        ;
+
+        
+    
+    
+            var marker_d678a76856f5a626d333a8c45a596493 = L.marker(
+                [21.3, 105.6],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_ce33960df0a820096ebbb7474484cacf = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_ba43cdec3d6d194d64bdfa5d1f2b74cd = $(`<div id="html_ba43cdec3d6d194d64bdfa5d1f2b74cd" style="width: 100.0%; height: 100.0%;">Vĩnh Phúc</div>`)[0];
+                popup_ce33960df0a820096ebbb7474484cacf.setContent(html_ba43cdec3d6d194d64bdfa5d1f2b74cd);
+            
+        
+
+        marker_d678a76856f5a626d333a8c45a596493.bindPopup(popup_ce33960df0a820096ebbb7474484cacf)
+        ;
+
+        
+    
+    
+            var poly_line_bfca02effad277ad51ac8a8357652026 = L.polyline(
+                [[21.0285, 105.8542], [21.3, 105.6]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_f032bbc4062f6b433990b64a5ea52441 = L.marker(
+                [21.3, 105.6],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_07d93d3ec633035528840c53dee74999 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_9a524d8637793847a0dd8b6eefeae8a1 = $(`<div id="html_9a524d8637793847a0dd8b6eefeae8a1" style="width: 100.0%; height: 100.0%;">Vĩnh Phúc</div>`)[0];
+                popup_07d93d3ec633035528840c53dee74999.setContent(html_9a524d8637793847a0dd8b6eefeae8a1);
+            
+        
+
+        marker_f032bbc4062f6b433990b64a5ea52441.bindPopup(popup_07d93d3ec633035528840c53dee74999)
+        ;
+
+        
+    
+    
+            var marker_e269ab5975691319a84aa7e9fb119fde = L.marker(
+                [21.3333, 105.1667],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_4b5252e02c91c8777dd49e78f7d88603 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_8cee7327a8394c9647278dbc045e8fd0 = $(`<div id="html_8cee7327a8394c9647278dbc045e8fd0" style="width: 100.0%; height: 100.0%;">Phú Thọ</div>`)[0];
+                popup_4b5252e02c91c8777dd49e78f7d88603.setContent(html_8cee7327a8394c9647278dbc045e8fd0);
+            
+        
+
+        marker_e269ab5975691319a84aa7e9fb119fde.bindPopup(popup_4b5252e02c91c8777dd49e78f7d88603)
+        ;
+
+        
+    
+    
+            var poly_line_408efad4f047d9b11647ae5de07c4a5f = L.polyline(
+                [[21.3, 105.6], [21.3333, 105.1667]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_9225a77cbb18c19275d1ebab2c9f6c15 = L.marker(
+                [21.3333, 105.1667],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_58b85a8fd47b0c59c8da5ba1b97a5cbe = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_a3e06c26a7272a5fa7d6be64e337366b = $(`<div id="html_a3e06c26a7272a5fa7d6be64e337366b" style="width: 100.0%; height: 100.0%;">Phú Thọ</div>`)[0];
+                popup_58b85a8fd47b0c59c8da5ba1b97a5cbe.setContent(html_a3e06c26a7272a5fa7d6be64e337366b);
+            
+        
+
+        marker_9225a77cbb18c19275d1ebab2c9f6c15.bindPopup(popup_58b85a8fd47b0c59c8da5ba1b97a5cbe)
+        ;
+
+        
+    
+    
+            var marker_b3a179683cf675db7f212c114ccc2f84 = L.marker(
+                [21.8333, 105.25],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_36542060fe2cc764de9dfa206000cf57 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_938056da5e170338b2ea86d13ab9c39e = $(`<div id="html_938056da5e170338b2ea86d13ab9c39e" style="width: 100.0%; height: 100.0%;">Tuyên Quang</div>`)[0];
+                popup_36542060fe2cc764de9dfa206000cf57.setContent(html_938056da5e170338b2ea86d13ab9c39e);
+            
+        
+
+        marker_b3a179683cf675db7f212c114ccc2f84.bindPopup(popup_36542060fe2cc764de9dfa206000cf57)
+        ;
+
+        
+    
+    
+            var poly_line_a8775ed98629113a4d070c8ede2f3f45 = L.polyline(
+                [[21.3333, 105.1667], [21.8333, 105.25]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_a0921015212c7ac425c343e175e3c943 = L.marker(
+                [21.8333, 105.25],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_a3c5da0fba45e0e57d8feb2f1ba93f15 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_91750181b0b3ad0b0aa5bbdfd2afcd4a = $(`<div id="html_91750181b0b3ad0b0aa5bbdfd2afcd4a" style="width: 100.0%; height: 100.0%;">Tuyên Quang</div>`)[0];
+                popup_a3c5da0fba45e0e57d8feb2f1ba93f15.setContent(html_91750181b0b3ad0b0aa5bbdfd2afcd4a);
+            
+        
+
+        marker_a0921015212c7ac425c343e175e3c943.bindPopup(popup_a3c5da0fba45e0e57d8feb2f1ba93f15)
+        ;
+
+        
+    
+    
+            var marker_8263cc0619099e08f27d3cca3dae1f00 = L.marker(
+                [22.1333, 105.8333],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_e6688de82f3b62172e8d5da03c35d251 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_7acef921890837b9f8bb80c32816f4dd = $(`<div id="html_7acef921890837b9f8bb80c32816f4dd" style="width: 100.0%; height: 100.0%;">Bắc Kạn</div>`)[0];
+                popup_e6688de82f3b62172e8d5da03c35d251.setContent(html_7acef921890837b9f8bb80c32816f4dd);
+            
+        
+
+        marker_8263cc0619099e08f27d3cca3dae1f00.bindPopup(popup_e6688de82f3b62172e8d5da03c35d251)
+        ;
+
+        
+    
+    
+            var poly_line_aa02f27c5464ac088e90a7774b4f2b8e = L.polyline(
+                [[21.8333, 105.25], [22.1333, 105.8333]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_e65abcf18a50f3ee0e7607ffa72b7963 = L.marker(
+                [22.1333, 105.8333],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_84822fb0663a2dbeff3b8835402dde95 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_1af211b6d27a0bf72952e32f750f3c0a = $(`<div id="html_1af211b6d27a0bf72952e32f750f3c0a" style="width: 100.0%; height: 100.0%;">Bắc Kạn</div>`)[0];
+                popup_84822fb0663a2dbeff3b8835402dde95.setContent(html_1af211b6d27a0bf72952e32f750f3c0a);
+            
+        
+
+        marker_e65abcf18a50f3ee0e7607ffa72b7963.bindPopup(popup_84822fb0663a2dbeff3b8835402dde95)
+        ;
+
+        
+    
+    
+            var marker_93d701c542ff5d6cd072fdf7f37e9d3a = L.marker(
+                [21.8333, 106.7333],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_0bb39f30fe22f9fade9c90b18532ff04 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_3059cc3f78ecf49c5fb102d2cb420d80 = $(`<div id="html_3059cc3f78ecf49c5fb102d2cb420d80" style="width: 100.0%; height: 100.0%;">Lạng Sơn</div>`)[0];
+                popup_0bb39f30fe22f9fade9c90b18532ff04.setContent(html_3059cc3f78ecf49c5fb102d2cb420d80);
+            
+        
+
+        marker_93d701c542ff5d6cd072fdf7f37e9d3a.bindPopup(popup_0bb39f30fe22f9fade9c90b18532ff04)
+        ;
+
+        
+    
+    
+            var poly_line_b98af2f6cafd54e109ff4533f68bf57b = L.polyline(
+                [[22.1333, 105.8333], [21.8333, 106.7333]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_a79d0e136257dd1b5e6729a88d77f89d = L.marker(
+                [21.8333, 106.7333],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_edc63b5941eb8868c9cdeabddda4db26 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_e99b85a1046299769a676a3a9b603d59 = $(`<div id="html_e99b85a1046299769a676a3a9b603d59" style="width: 100.0%; height: 100.0%;">Lạng Sơn</div>`)[0];
+                popup_edc63b5941eb8868c9cdeabddda4db26.setContent(html_e99b85a1046299769a676a3a9b603d59);
+            
+        
+
+        marker_a79d0e136257dd1b5e6729a88d77f89d.bindPopup(popup_edc63b5941eb8868c9cdeabddda4db26)
+        ;
+
+        
+    
+    
+            var marker_311a264b3016458a9eefb50272e98192 = L.marker(
+                [22.8333, 104.9833],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_a1fd6545ca6ef9b0051cd500ee2b3c51 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_986a67b9aa2c60900fed2475816e0f16 = $(`<div id="html_986a67b9aa2c60900fed2475816e0f16" style="width: 100.0%; height: 100.0%;">Hà Giang</div>`)[0];
+                popup_a1fd6545ca6ef9b0051cd500ee2b3c51.setContent(html_986a67b9aa2c60900fed2475816e0f16);
+            
+        
+
+        marker_311a264b3016458a9eefb50272e98192.bindPopup(popup_a1fd6545ca6ef9b0051cd500ee2b3c51)
+        ;
+
+        
+    
+    
+            var poly_line_751d8284ac99f6fbd596d763c0e1ee4b = L.polyline(
+                [[21.8333, 106.7333], [22.8333, 104.9833]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_de63301a19e0607da16c4f1f471bd36f = L.marker(
+                [22.8333, 104.9833],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_041d193a3f14107cec8131a42441bb49 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_60e455b5f7ef5f78563a5c03b810d4a6 = $(`<div id="html_60e455b5f7ef5f78563a5c03b810d4a6" style="width: 100.0%; height: 100.0%;">Hà Giang</div>`)[0];
+                popup_041d193a3f14107cec8131a42441bb49.setContent(html_60e455b5f7ef5f78563a5c03b810d4a6);
+            
+        
+
+        marker_de63301a19e0607da16c4f1f471bd36f.bindPopup(popup_041d193a3f14107cec8131a42441bb49)
+        ;
+
+        
+    
+    
+            var marker_04331e977e31dc0c82b83ba78567c287 = L.marker(
+                [22.4833, 103.9667],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_f7068b895c81e1f3646db90bc3368d82 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_0bd1352850a89a3c22249c9a7bdb88e8 = $(`<div id="html_0bd1352850a89a3c22249c9a7bdb88e8" style="width: 100.0%; height: 100.0%;">Lào Cai</div>`)[0];
+                popup_f7068b895c81e1f3646db90bc3368d82.setContent(html_0bd1352850a89a3c22249c9a7bdb88e8);
+            
+        
+
+        marker_04331e977e31dc0c82b83ba78567c287.bindPopup(popup_f7068b895c81e1f3646db90bc3368d82)
+        ;
+
+        
+    
+    
+            var poly_line_48aa50e32e8c0a14e95d8d001a82804c = L.polyline(
+                [[22.8333, 104.9833], [22.4833, 103.9667]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_67aceb1de527d403d8f7659f8fab9d25 = L.marker(
+                [22.4833, 103.9667],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_a81075c85a72632fd20d5110586a35b9 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_d245c8d3e5352b2c540d291079e62040 = $(`<div id="html_d245c8d3e5352b2c540d291079e62040" style="width: 100.0%; height: 100.0%;">Lào Cai</div>`)[0];
+                popup_a81075c85a72632fd20d5110586a35b9.setContent(html_d245c8d3e5352b2c540d291079e62040);
+            
+        
+
+        marker_67aceb1de527d403d8f7659f8fab9d25.bindPopup(popup_a81075c85a72632fd20d5110586a35b9)
+        ;
+
+        
+    
+    
+            var marker_2652c3a85f8936906521af23507e6c42 = L.marker(
+                [22.3964, 103.4431],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_8f8e2bde4bd403452892264a6d882fd9 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_0ae1529661f66707b7f0d7fdeb3bc6da = $(`<div id="html_0ae1529661f66707b7f0d7fdeb3bc6da" style="width: 100.0%; height: 100.0%;">Lai Châu</div>`)[0];
+                popup_8f8e2bde4bd403452892264a6d882fd9.setContent(html_0ae1529661f66707b7f0d7fdeb3bc6da);
+            
+        
+
+        marker_2652c3a85f8936906521af23507e6c42.bindPopup(popup_8f8e2bde4bd403452892264a6d882fd9)
+        ;
+
+        
+    
+    
+            var poly_line_86422da11700af473079f50cb017fb45 = L.polyline(
+                [[22.4833, 103.9667], [22.3964, 103.4431]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_7eb2b245b11eead02e4b6d29d387d3fc = L.marker(
+                [21.0285, 105.8542],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_ee94a0994f176a47cd5981b1d2cc7da0 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_180531b076670335691be4038a1e3afc = $(`<div id="html_180531b076670335691be4038a1e3afc" style="width: 100.0%; height: 100.0%;">Hà Nội</div>`)[0];
+                popup_ee94a0994f176a47cd5981b1d2cc7da0.setContent(html_180531b076670335691be4038a1e3afc);
+            
+        
+
+        marker_7eb2b245b11eead02e4b6d29d387d3fc.bindPopup(popup_ee94a0994f176a47cd5981b1d2cc7da0)
+        ;
+
+        
+    
+    
+            var marker_2223dfc997b3b0d8e4aecbe91540328c = L.marker(
+                [20.6467, 106.0514],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_1a9c47727d36c3787b13ea3d805aad99 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_84bf24716cc9520901814d96c0c78197 = $(`<div id="html_84bf24716cc9520901814d96c0c78197" style="width: 100.0%; height: 100.0%;">Hưng Yên</div>`)[0];
+                popup_1a9c47727d36c3787b13ea3d805aad99.setContent(html_84bf24716cc9520901814d96c0c78197);
+            
+        
+
+        marker_2223dfc997b3b0d8e4aecbe91540328c.bindPopup(popup_1a9c47727d36c3787b13ea3d805aad99)
+        ;
+
+        
+    
+    
+            var poly_line_f10956246a682ed2ecead96e05562662 = L.polyline(
+                [[21.0285, 105.8542], [20.6467, 106.0514]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_9bb7e7c9ac946acf1f294b28c676c18b = L.marker(
+                [20.6467, 106.0514],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_8229e5d711adf27600f7832606a5e28d = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_4fa2031a28403265eadc4f1f22a35cb4 = $(`<div id="html_4fa2031a28403265eadc4f1f22a35cb4" style="width: 100.0%; height: 100.0%;">Hưng Yên</div>`)[0];
+                popup_8229e5d711adf27600f7832606a5e28d.setContent(html_4fa2031a28403265eadc4f1f22a35cb4);
+            
+        
+
+        marker_9bb7e7c9ac946acf1f294b28c676c18b.bindPopup(popup_8229e5d711adf27600f7832606a5e28d)
+        ;
+
+        
+    
+    
+            var marker_392b95976b66c7d3641d71686325b439 = L.marker(
+                [20.5417, 105.9222],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_8a5d20ace59761ba5ef11319c41599d8 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_4c759f3db7a59a1d93ee0fe19484bf9e = $(`<div id="html_4c759f3db7a59a1d93ee0fe19484bf9e" style="width: 100.0%; height: 100.0%;">Hà Nam</div>`)[0];
+                popup_8a5d20ace59761ba5ef11319c41599d8.setContent(html_4c759f3db7a59a1d93ee0fe19484bf9e);
+            
+        
+
+        marker_392b95976b66c7d3641d71686325b439.bindPopup(popup_8a5d20ace59761ba5ef11319c41599d8)
+        ;
+
+        
+    
+    
+            var poly_line_c232588922f5aecf00ddc2a1833dc987 = L.polyline(
+                [[20.6467, 106.0514], [20.5417, 105.9222]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_bf1b8604f7c5db29a7692e2fe9ae1e32 = L.marker(
+                [20.5417, 105.9222],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_0e4e4a70fcda9aa732d291494b8eeaff = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_004bb37cdf16d3043cecdc45d0b3be85 = $(`<div id="html_004bb37cdf16d3043cecdc45d0b3be85" style="width: 100.0%; height: 100.0%;">Hà Nam</div>`)[0];
+                popup_0e4e4a70fcda9aa732d291494b8eeaff.setContent(html_004bb37cdf16d3043cecdc45d0b3be85);
+            
+        
+
+        marker_bf1b8604f7c5db29a7692e2fe9ae1e32.bindPopup(popup_0e4e4a70fcda9aa732d291494b8eeaff)
+        ;
+
+        
+    
+    
+            var marker_babe7528b487763a6ad169debf20a20e = L.marker(
+                [20.4267, 106.165],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_b2ac0da3c8d0d19d79f93bb9d38aad1e = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_dd7daf779a404f33c86e00d15c1b300d = $(`<div id="html_dd7daf779a404f33c86e00d15c1b300d" style="width: 100.0%; height: 100.0%;">Nam Định</div>`)[0];
+                popup_b2ac0da3c8d0d19d79f93bb9d38aad1e.setContent(html_dd7daf779a404f33c86e00d15c1b300d);
+            
+        
+
+        marker_babe7528b487763a6ad169debf20a20e.bindPopup(popup_b2ac0da3c8d0d19d79f93bb9d38aad1e)
+        ;
+
+        
+    
+    
+            var poly_line_484576bb90217236f844235a2e6bb5f6 = L.polyline(
+                [[20.5417, 105.9222], [20.4267, 106.165]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_d26ec1788293f51920a428ed3ccfe851 = L.marker(
+                [20.4267, 106.165],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_812cc360409bfdc3a72b8171c17616a3 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_83a4e00a8de081589218f0f6a1fdec90 = $(`<div id="html_83a4e00a8de081589218f0f6a1fdec90" style="width: 100.0%; height: 100.0%;">Nam Định</div>`)[0];
+                popup_812cc360409bfdc3a72b8171c17616a3.setContent(html_83a4e00a8de081589218f0f6a1fdec90);
+            
+        
+
+        marker_d26ec1788293f51920a428ed3ccfe851.bindPopup(popup_812cc360409bfdc3a72b8171c17616a3)
+        ;
+
+        
+    
+    
+            var marker_d8a9e53c3a75a80b55e65aed97ae970a = L.marker(
+                [20.4556, 106.3319],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_37389508f2819485c65c0c8465d69ea1 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_d6bea849d0a9cb1e68735948ccd860bd = $(`<div id="html_d6bea849d0a9cb1e68735948ccd860bd" style="width: 100.0%; height: 100.0%;">Thái Bình</div>`)[0];
+                popup_37389508f2819485c65c0c8465d69ea1.setContent(html_d6bea849d0a9cb1e68735948ccd860bd);
+            
+        
+
+        marker_d8a9e53c3a75a80b55e65aed97ae970a.bindPopup(popup_37389508f2819485c65c0c8465d69ea1)
+        ;
+
+        
+    
+    
+            var poly_line_9c3da58e427be089d910d0cea344bbca = L.polyline(
+                [[20.4267, 106.165], [20.4556, 106.3319]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_b0b963b4ca96e8c4a199c69c9a580ae5 = L.marker(
+                [20.4556, 106.3319],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_3c6c6b9d9d3dcd7971d2cc5a14a59c42 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_816df8eb72c4642fd09516f85b7ed0e7 = $(`<div id="html_816df8eb72c4642fd09516f85b7ed0e7" style="width: 100.0%; height: 100.0%;">Thái Bình</div>`)[0];
+                popup_3c6c6b9d9d3dcd7971d2cc5a14a59c42.setContent(html_816df8eb72c4642fd09516f85b7ed0e7);
+            
+        
+
+        marker_b0b963b4ca96e8c4a199c69c9a580ae5.bindPopup(popup_3c6c6b9d9d3dcd7971d2cc5a14a59c42)
+        ;
+
+        
+    
+    
+            var marker_80067444cd414a78a88c2ea5a695d75c = L.marker(
+                [20.2544, 105.975],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_5f25324db69f0a1b2462eaeb848329af = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_1c16639fc7d14509f11e38dce36db100 = $(`<div id="html_1c16639fc7d14509f11e38dce36db100" style="width: 100.0%; height: 100.0%;">Ninh Bình</div>`)[0];
+                popup_5f25324db69f0a1b2462eaeb848329af.setContent(html_1c16639fc7d14509f11e38dce36db100);
+            
+        
+
+        marker_80067444cd414a78a88c2ea5a695d75c.bindPopup(popup_5f25324db69f0a1b2462eaeb848329af)
+        ;
+
+        
+    
+    
+            var poly_line_10e758c1d7207896e306acecc8991d65 = L.polyline(
+                [[20.4556, 106.3319], [20.2544, 105.975]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_884d6daef01a49a664879b432da32265 = L.marker(
+                [20.2544, 105.975],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_0fa8700436436a493f31710bfd750292 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_77725a0bb9dc835c22be7adcaf419539 = $(`<div id="html_77725a0bb9dc835c22be7adcaf419539" style="width: 100.0%; height: 100.0%;">Ninh Bình</div>`)[0];
+                popup_0fa8700436436a493f31710bfd750292.setContent(html_77725a0bb9dc835c22be7adcaf419539);
+            
+        
+
+        marker_884d6daef01a49a664879b432da32265.bindPopup(popup_0fa8700436436a493f31710bfd750292)
+        ;
+
+        
+    
+    
+            var marker_b98dc5f2a11b37f0c860e3558be89c75 = L.marker(
+                [20.8133, 105.3383],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_857dedb495d05dbfbc42cf46d5b2a9df = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_6391c1fa2d01d13cbcf9281edafe9ff1 = $(`<div id="html_6391c1fa2d01d13cbcf9281edafe9ff1" style="width: 100.0%; height: 100.0%;">Hòa Bình</div>`)[0];
+                popup_857dedb495d05dbfbc42cf46d5b2a9df.setContent(html_6391c1fa2d01d13cbcf9281edafe9ff1);
+            
+        
+
+        marker_b98dc5f2a11b37f0c860e3558be89c75.bindPopup(popup_857dedb495d05dbfbc42cf46d5b2a9df)
+        ;
+
+        
+    
+    
+            var poly_line_aa4f6a3ddfdebc4ddbffd5f52b966977 = L.polyline(
+                [[20.2544, 105.975], [20.8133, 105.3383]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_dc9afbe9181f22eabf9c1ac0f6ee765e = L.marker(
+                [20.8133, 105.3383],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_5452932a4add6c45abd2219c9030dccb = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_62c1aafdc43d0be4730760ffd7d53b9c = $(`<div id="html_62c1aafdc43d0be4730760ffd7d53b9c" style="width: 100.0%; height: 100.0%;">Hòa Bình</div>`)[0];
+                popup_5452932a4add6c45abd2219c9030dccb.setContent(html_62c1aafdc43d0be4730760ffd7d53b9c);
+            
+        
+
+        marker_dc9afbe9181f22eabf9c1ac0f6ee765e.bindPopup(popup_5452932a4add6c45abd2219c9030dccb)
+        ;
+
+        
+    
+    
+            var marker_b501f0b00203e689ac6fd7a1559adf41 = L.marker(
+                [21.3333, 103.9],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_3ce88d4a1f71d0e4e0f46a9fe96cdf12 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_7a1a0caafb7387a0dc354f37fc7be508 = $(`<div id="html_7a1a0caafb7387a0dc354f37fc7be508" style="width: 100.0%; height: 100.0%;">Sơn La</div>`)[0];
+                popup_3ce88d4a1f71d0e4e0f46a9fe96cdf12.setContent(html_7a1a0caafb7387a0dc354f37fc7be508);
+            
+        
+
+        marker_b501f0b00203e689ac6fd7a1559adf41.bindPopup(popup_3ce88d4a1f71d0e4e0f46a9fe96cdf12)
+        ;
+
+        
+    
+    
+            var poly_line_662f5cc2d0c850ea816609faddcf89bb = L.polyline(
+                [[20.8133, 105.3383], [21.3333, 103.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+            var marker_180dc65aebb1ffdfe9c46e1f94004307 = L.marker(
+                [21.3333, 103.9],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_25c52f4afcd16b25f60e6472bd791330 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_36834d5de0a6f871feaadfd160e2eb1b = $(`<div id="html_36834d5de0a6f871feaadfd160e2eb1b" style="width: 100.0%; height: 100.0%;">Sơn La</div>`)[0];
+                popup_25c52f4afcd16b25f60e6472bd791330.setContent(html_36834d5de0a6f871feaadfd160e2eb1b);
+            
+        
+
+        marker_180dc65aebb1ffdfe9c46e1f94004307.bindPopup(popup_25c52f4afcd16b25f60e6472bd791330)
+        ;
+
+        
+    
+    
+            var marker_c36c41dfc3c110d9862a5f407d16d063 = L.marker(
+                [21.3833, 103.0],
+                {}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+    
+        var popup_eb707037f798f766958f98b40711ee88 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_97e83722728e682591a12eb4b9fc7e0b = $(`<div id="html_97e83722728e682591a12eb4b9fc7e0b" style="width: 100.0%; height: 100.0%;">Điện Biên</div>`)[0];
+                popup_eb707037f798f766958f98b40711ee88.setContent(html_97e83722728e682591a12eb4b9fc7e0b);
+            
+        
+
+        marker_c36c41dfc3c110d9862a5f407d16d063.bindPopup(popup_eb707037f798f766958f98b40711ee88)
+        ;
+
+        
+    
+    
+            var poly_line_00009923bf6e763d6f95dc487cdaba1b = L.polyline(
+                [[21.3333, 103.9], [21.3833, 103.0]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 1.0, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0239f5bcccedc5768f35062a7e48dbca);
+        
+</script>
+</html>

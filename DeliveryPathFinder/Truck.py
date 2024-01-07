@@ -9,7 +9,7 @@ class Truck:
         self.delivery_queue = []
         self.priority_delivery_queue = []
         self.truck_id = truck_id
-        self.packages_delivered = 0
+        self.packages_list = []
         self.package_count = 0
         self.distance = 0
         self.time = 0

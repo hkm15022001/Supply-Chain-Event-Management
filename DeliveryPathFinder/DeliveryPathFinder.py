@@ -9,8 +9,8 @@ from Hub import Hub
 from Truck import Truck
 from Package import Package
 from Location import Location
+from Data.PathToCoordinates import convert_paths_to_coordinates
 from Data.visualize import visualize
-
 def check_status(current_time, hub, packages):
     print()
     packages_by_status = hub.get_packages_by_status(packages)
@@ -104,10 +104,12 @@ def process_optimize():
                     if package.location.label == truck.current_location.label and truck.load_on_truck(package) and package not in loaded_packages:
                         loaded_packages.append(package)
                         unloaded_packages.remove(package)
+                        truck.packages_list.append(package.package_id)
             
             else:
                 truck.skip = True
                 continue
+    package_list_result = {trucks[0].truck_id:trucks[0].packages_list,trucks[1].truck_id:trucks[1].packages_list,trucks[2].truck_id:trucks[2].packages_list}
     print("<------------All packages loaded---------------->\n")
 
     # deliver all packages calculating distance
@@ -160,10 +162,10 @@ def process_optimize():
     # report time finished and distance of each truck and total distance of all trucks
     total_distance = trucks[0].distance + trucks[1].distance + trucks[2].distance
     print("Total Distance", total_distance)
-
     truck_path=[trucks[0].path,trucks[1].path,trucks[2].path]
     visualize(truck_path)
-
+    coordinates_path = convert_paths_to_coordinates(truck_path)
+    return total_distance,package_list_result,truck_path,coordinates_path
     
     # TODO: An interface that allows the user to enter a time to check the status of a package or all packages at a given time is not readily evident
     # print("<----------------------------STATUS CHECK------------------------------>")
