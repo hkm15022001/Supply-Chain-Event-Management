@@ -499,9 +499,10 @@ func createExampleOrder() error {
 	orderInfo := &model.OrderInfo{
 		Weight: 2, Volume: 10, Type: "Normal", Image: "box.jpg",
 		CustomerSendID: 1, EmplCreateID: 2,
-		Sender:           "Customer One - 269 Ngo Quyen, Quan 5, Hà Nội - 5676765678",
-		Receiver:         "Mai Thi Cuc - 38 Tran Hung Dao, Quan 1, Hà Nội - 6765677867",
+		Sender:           "Customer One - 269 Ngo Quyen, Hà Nội - 5676765678",
+		Receiver:         "Mai Thi Cuc - 38 Tran Hung Dao, Hà Nội - 6765677867",
 		Detail:           "May vi tinh ca nhan va ban phim may tinh",
+		ReceiversAddress: "Hà Nội",
 		OrderShortShipID: 1, TransportTypeID: 1, LongShipDistance: 20,
 		TotalPrice: 200000, Note: "Giao hang vao buoi sang",
 	}

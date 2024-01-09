@@ -5,7 +5,7 @@ import os
 def visualize(paths):
 
     # Màu cho từng path
-    colors = ['blue', 'green', 'red']
+    colors = ['blue', 'green', 'red','yellow','black','pink']
 
     current_directory = os.path.dirname(__file__)
     file_path = os.path.join(current_directory,  'delivery_locations.csv')

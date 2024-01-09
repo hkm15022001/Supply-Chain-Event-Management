@@ -99,6 +99,7 @@ type OrderInfoForShipment struct {
 	CustomerReceiveID uint
 	Sender            string
 	Receiver          string
+	ReceiversAddress  string
 }
 
 // OrderInfoWithVoucher structure

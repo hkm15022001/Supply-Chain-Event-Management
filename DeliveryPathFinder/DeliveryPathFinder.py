@@ -38,7 +38,7 @@ def process_optimize():
 
     hub = Hub()
     print("<------------Processing and loading special packages on trucks---------------->")
-    trucks = [Truck(1, hub.drivers[0]), Truck(2, hub.drivers[1]), Truck(3)]
+    trucks = [Truck(1, hub.drivers[0]), Truck(2, hub.drivers[1]), Truck(3),Truck(4)]
     packages_by_id = hub.get_packages_by_id(packages)
     unloaded_packages = []
 
@@ -109,7 +109,10 @@ def process_optimize():
             else:
                 truck.skip = True
                 continue
-    package_list_result = {trucks[0].truck_id:trucks[0].packages_list,trucks[1].truck_id:trucks[1].packages_list,trucks[2].truck_id:trucks[2].packages_list}
+
+    package_list_result={}
+    for truck in trucks:
+        package_list_result[truck.truck_id] = truck.packages_list
     print("<------------All packages loaded---------------->\n")
 
     # deliver all packages calculating distance
@@ -162,8 +165,11 @@ def process_optimize():
     # report time finished and distance of each truck and total distance of all trucks
     total_distance = trucks[0].distance + trucks[1].distance + trucks[2].distance
     print("Total Distance", total_distance)
-    truck_path=[trucks[0].path,trucks[1].path,trucks[2].path]
-    visualize(truck_path)
+    truck_path=[]
+    for truck in trucks:
+        truck_path.append(truck.path)
+    # visualize(truck_path)
+    print(truck_path)
     coordinates_path = convert_paths_to_coordinates(truck_path)
     return total_distance,package_list_result,truck_path,coordinates_path
     

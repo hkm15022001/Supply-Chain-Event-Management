@@ -8,7 +8,7 @@ from Location import Location
 
 hub = Hub()
 
-with open(Path(__file__).parent/'Data/updated_package.csv', mode='r',encoding='utf-8') as packages:
+with open(Path(__file__).parent/'Data/order.csv', mode='r',encoding='utf-8') as packages:
     package_list = hub.package_list
     package_reader = csv.reader(packages, delimiter=',')
     count = 0
@@ -17,7 +17,7 @@ with open(Path(__file__).parent/'Data/updated_package.csv', mode='r',encoding='u
             package_id = int(row[0])
             package = Package(package_id=row[0], package_weight=row[2], special_note=row[3],
                                     delivery_address=row[1])
-            package_list[package_id - 1] = package
+            package_list.append(package) 
         count += 1
 
 with open(Path(__file__).parent/'Data/distance_matrix1.csv', mode='r',encoding='utf-8') as distances:

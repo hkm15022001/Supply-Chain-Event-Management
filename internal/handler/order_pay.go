@@ -4,10 +4,10 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/model"
 	CommonService "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
 	CommonMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common_message"
-	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/validator.v2"
 	"gorm.io/gorm"
@@ -182,7 +182,16 @@ func CreateOrderPayStepTwoHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
+	if orderInfoForPayment.LongShipID == 0 {
+		orderPay.PayMethod = stepTwoRequest.PayMethod
+		orderPay.FinishedStepTwo = true
+		if err := db.Model(&orderPay).Updates(&orderPay).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, gin.H{"server_response": "Payment success! New workflow instance has NOT been created!"})
+		return
+	}
 	// shipper_receive_money will be sent when using app
 	orderWorkflowData := &model.OrderWorkflowData{
 		OrderID:             stepTwoRequest.OrderID,

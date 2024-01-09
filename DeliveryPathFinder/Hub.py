@@ -2,7 +2,7 @@ from PackagePropertyTable import PackagePropertyTable
 
 class Hub:
     def __init__(self, capacity=40):
-        self.package_list = [None] * capacity
+        self.package_list = [] 
         self.start_time = 8
         self.drivers = ['Bill', 'Ted']
         self.finish_time = 0
