@@ -67,12 +67,16 @@ func main() {
 	if os.Getenv("STATE_SERVICE") == "1" {
 		connectZeebeClient()
 	}
-	brokerList := []string{os.Getenv("KAFKA_URL")}
-	topic := "order-topic"
-	kafka.StartProducer(brokerList, topic)
+
 	// WaitGroup để chờ cả hai server kết thúc
 	var wg sync.WaitGroup
-	wg.Add(2)
+	wg.Add(3)
+	go func() {
+		defer wg.Done()
+		brokerList := []string{os.Getenv("KAFKA_BOOTSTRAP_SERVER")}
+		topic := "order-topic"
+		kafka.StartProducer(brokerList, topic)
+	}()
 
 	// Khởi chạy HTTP server trong một goroutine
 	go func() {
