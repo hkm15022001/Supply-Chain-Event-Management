@@ -3,16 +3,17 @@ package main
 import (
 	"log"
 	"os"
+	"sync"
 
+	grpc "github.com/hkm15022001/Supply-Chain-Event-Management/api/grpc"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/api/middleware"
-	"github.com/hkm15022001/Supply-Chain-Event-Management/api/server"
+	httpServer "github.com/hkm15022001/Supply-Chain-Event-Management/api/server"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/handler"
 	CommonService "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common"
 	CommonMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/common_message"
 	ZBMessage "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/message"
 	ZBWorker "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/worker"
 	ZBWorkflow "github.com/hkm15022001/Supply-Chain-Event-Management/internal/service/zeebe/workflow"
-
 	"github.com/joho/godotenv"
 )
 
@@ -66,9 +67,24 @@ func main() {
 		connectZeebeClient()
 	}
 
-	// Our servers will live in the routes package
-	server.RunServer()
+	// WaitGroup để chờ cả hai server kết thúc
+	var wg sync.WaitGroup
+	wg.Add(2)
 
+	// Khởi chạy HTTP server trong một goroutine
+	go func() {
+		defer wg.Done()
+		httpServer.RunServer()
+	}()
+
+	// Khởi chạy gRPC server trong một goroutine
+	go func() {
+		defer wg.Done()
+		grpc.RunServer()
+	}()
+
+	// Đợi cho cả hai server kết thúc
+	wg.Wait()
 }
 
 // Source code: https://www.devdungeon.com/content/working-files-go#read_all
