@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	grpc "github.com/hkm15022001/Supply-Chain-Event-Management/api/grpc"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/api/kafka"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/api/middleware"
 	httpServer "github.com/hkm15022001/Supply-Chain-Event-Management/api/server"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/handler"
@@ -66,7 +67,9 @@ func main() {
 	if os.Getenv("STATE_SERVICE") == "1" {
 		connectZeebeClient()
 	}
-
+	brokerList := []string{os.Getenv("KAFKA_URL")}
+	topic := "order-topic"
+	kafka.StartProducer(brokerList, topic)
 	// WaitGroup để chờ cả hai server kết thúc
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -80,7 +83,7 @@ func main() {
 	// Khởi chạy gRPC server trong một goroutine
 	go func() {
 		defer wg.Done()
-		grpc.RunServer()
+		grpc.RunServer(os.Getenv("GRPC_URL"))
 	}()
 
 	// Đợi cho cả hai server kết thúc
