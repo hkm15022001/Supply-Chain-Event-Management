@@ -3,7 +3,6 @@ package kafka
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -43,12 +42,12 @@ func StartProducer(brokerList []string, topic string) {
 	defer CloseProducer()
 
 	log.Println("Connected to Kafka")
-	go func() {
-		for {
-			ProduceMessage(topic, "Hello from Golang!")
-			time.Sleep(10 * time.Second)
-		}
-	}()
+	// go func() {
+	// 	for {
+	// 		ProduceMessage(topic, "Hello from Golang!")
+	// 		time.Sleep(10 * time.Second)
+	// 	}
+	// }()
 	select {}
 }
 
