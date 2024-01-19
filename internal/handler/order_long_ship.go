@@ -41,17 +41,17 @@ func GetLongShipListHandler(c *gin.Context) {
 	if sortByCondition == "available" {
 		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "estimated_time_of_departure > ?", time.Now().Unix())
 	} else if sortByCondition == "ready" {
-		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "estimated_time_of_departure < ? AND finished is ? AND package_loaded is ?", time.Now().Unix(), false, false)
+		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "estimated_time_of_departure < ? AND finished = ? AND package_loaded = ?", time.Now().Unix(), false, false)
 	} else if sortByCondition == "running" {
-		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "estimated_time_of_departure < ? AND finished is ? AND package_loaded is ?", time.Now().Unix(), false, true)
+		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "estimated_time_of_departure < ? AND finished = ? AND package_loaded = ?", time.Now().Unix(), false, true)
 	} else if sortByCondition == "finished" {
-		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "finished is ?", true)
+		db.Model(&model.LongShip{}).Order("id asc").Find(&longShips2, "finished = ?", true)
 	} else if sortByCondition == "" {
 		longShips2 = longShips
 	}
 
 	transportTypes := []model.TransportType{}
-	db.Where("same_city is ?", false).Order("id asc").Find(&transportTypes)
+	db.Where("same_city = ?", false).Order("id asc").Find(&transportTypes)
 
 	longShipTotal := 0
 	readyTotal := 0
@@ -122,7 +122,7 @@ func GetLongShipHandler(c *gin.Context) {
 // CreateLongShipFormData in frontend
 func CreateLongShipFormData(c *gin.Context) {
 	transportTypes := []model.TransportType{}
-	db.Where("same_city is ?", false).Order("id asc").Find(&transportTypes)
+	db.Where("same_city = ?", false).Order("id asc").Find(&transportTypes)
 	c.JSON(http.StatusOK, gin.H{"transport_type_list": &transportTypes})
 	return
 }
@@ -207,7 +207,7 @@ func UpdateLongShipFormData(c *gin.Context) {
 		return
 	}
 	transportTypes := []model.TransportType{}
-	db.Where("same_city == ?", false).Order("id asc").Find(&transportTypes)
+	db.Where("same_city = ?", false).Order("id asc").Find(&transportTypes)
 	c.JSON(http.StatusOK, gin.H{
 		"long_ship_info":      &longShip,
 		"transport_type_list": &transportTypes,
@@ -245,12 +245,14 @@ func UpdateLSLoadPackageHandler(c *gin.Context, userAuthID uint) {
 	employeeID, err := getEmployeeIDByUserAuthID(userAuthID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Print("err when get employee by userauth", err)
 		return
 	}
 	// QRcode will replace this line
 	longShip, err := getLongShipOrNotFoundByQrcode(c)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		log.Print("err when get longship by qrcode", err)
 		return
 	}
 	// if longShip.PackageLoaded == true {
@@ -291,6 +293,8 @@ func UpdateLSLoadPackageHandler(c *gin.Context, userAuthID uint) {
 	})
 
 	if err := g.Wait(); err != nil {
+		log.Print("err when wait group", err)
+
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

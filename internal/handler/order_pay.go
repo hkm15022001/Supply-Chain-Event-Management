@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -182,7 +183,7 @@ func CreateOrderPayStepTwoHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	if orderInfoForPayment.LongShipID == 0 {
+	if orderInfoForPayment.UseLongShip == true && orderInfoForPayment.LongShipID == 0 {
 		orderPay.PayMethod = stepTwoRequest.PayMethod
 		orderPay.FinishedStepTwo = true
 		if err := db.Model(&orderPay).Updates(&orderPay).Error; err != nil {
@@ -265,7 +266,19 @@ func UpdateOrderPayConfirmHandler(c *gin.Context) {
 
 	// Update customer credit
 	g.Go(func() error {
-		err := CommonMessage.PublishPaymentConfirmedMessage(orderID)
+		var err error
+		orderInfoForPayment, err = getOrderInfoOrNotFoundForPayment(orderID)
+		if err != nil {
+			return err
+		}
+		log.Print("longshipid: ", orderInfoForPayment)
+		if orderInfoForPayment.UseLongShip == true && orderInfoForPayment.LongShipID == 0 {
+			log.Print("vao if")
+			return nil
+		}
+		log.Print("ko vao if")
+
+		err = CommonMessage.PublishPaymentConfirmedMessage(orderID)
 		if err != nil {
 			return err
 		}
