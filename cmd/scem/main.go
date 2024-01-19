@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	grpc "github.com/hkm15022001/Supply-Chain-Event-Management/api/grpc"
+	"github.com/hkm15022001/Supply-Chain-Event-Management/api/kafka"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/api/middleware"
 	httpServer "github.com/hkm15022001/Supply-Chain-Event-Management/api/server"
 	"github.com/hkm15022001/Supply-Chain-Event-Management/internal/handler"
@@ -53,15 +54,15 @@ func main() {
 	CommonService.MappingGormDBConnection(gormDB)
 	CommonMessage.MappingGormDBConnection(gormDB)
 
-	if err := handler.RefreshDatabase(); err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-	if err := handler.MigrationDatabase(); err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-	log.Print("Database refreshed!")
+	// if err := handler.RefreshDatabase(); err != nil {
+	// 	log.Println(err)
+	// 	os.Exit(1)
+	// }
+	// if err := handler.MigrationDatabase(); err != nil {
+	// 	log.Println(err)
+	// 	os.Exit(1)
+	// }
+	// log.Print("Database refreshed!")
 
 	if os.Getenv("STATE_SERVICE") == "1" {
 		connectZeebeClient()
@@ -69,13 +70,20 @@ func main() {
 
 	// WaitGroup để chờ cả hai server kết thúc
 	var wg sync.WaitGroup
-	wg.Add(2)
-	// go func() {
-	// 	defer wg.Done()
-	// 	brokerList := []string{os.Getenv("KAFKA_BOOTSTRAP_SERVER")}
-	// 	topic := "order-topic"
-	// 	kafka.StartProducer(brokerList, topic)
-	// }()
+	wg.Add(4)
+	go func() {
+		defer wg.Done()
+		brokerList := []string{os.Getenv("KAFKA_BOOTSTRAP_SERVER")}
+		order_topic := "order-topic"
+		kafka.StartProducer(brokerList, order_topic)
+	}()
+
+	go func() {
+		defer wg.Done()
+		brokerList := []string{os.Getenv("KAFKA_BOOTSTRAP_SERVER")}
+		longship_topic := "longship-topic"
+		kafka.StartConsumer(brokerList, longship_topic)
+	}()
 
 	// Khởi chạy HTTP server trong một goroutine
 	go func() {
@@ -89,7 +97,7 @@ func main() {
 		grpc.RunServer(os.Getenv("GRPC_URL"))
 	}()
 
-	// Đợi cho cả hai server kết thúc
+	// Đợi cho tất cả server kết thúc
 	wg.Wait()
 }
 
