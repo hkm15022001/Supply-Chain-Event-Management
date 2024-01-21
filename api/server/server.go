@@ -59,12 +59,12 @@ func RunServer() {
 func webRouter() http.Handler {
 	e := gin.Default()
 
-	e.Static("/api/images", os.Getenv("IMAGE_FILE_PATH"))
-	e.Static("/api/qrcode", os.Getenv("QR_CODE_FILE_PATH"))
+	e.Static("/scem-ship/api/images", os.Getenv("IMAGE_FILE_PATH"))
+	e.Static("/scem-ship/api/qrcode", os.Getenv("QR_CODE_FILE_PATH"))
 	// Set a lower memory limit for multipart forms (default is 32 MiB)
 	e.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	api := e.Group("/api")
+	api := e.Group("/scem-ship/api")
 	router.WebAuthRoutes(api)
 	// Active web auth
 	if os.Getenv("RUN_WEB_AUTH") == "yes" {
@@ -78,13 +78,13 @@ func webRouter() http.Handler {
 
 func appRouter() http.Handler {
 	e := gin.Default()
-	e.Static("/api/images", os.Getenv("IMAGE_FILE_PATH"))
+	e.Static("/scem-ship/api/images", os.Getenv("IMAGE_FILE_PATH"))
 
-	fcmAuth := e.Group("/fcm-auth")
+	fcmAuth := e.Group("/scem-ship/fcm-auth")
 	router.AppFMCToken(fcmAuth)
 
-	api := e.Group("/api")
-	appAuth := e.Group("/app-auth")
+	api := e.Group("/scem-ship/api")
+	appAuth := e.Group("/scem-ship/app-auth")
 
 	// Select app auth database
 	if os.Getenv("RUN_APP_AUTH") == "redis" {
